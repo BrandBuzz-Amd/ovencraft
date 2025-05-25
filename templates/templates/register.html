@@ -1,0 +1,184 @@
+{% load static %}
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link href="{% static '/css/register.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Registration Section -->
+<section class="register-section">
+    <div class="container">
+        <div class="register-container">
+            <div class="register-header">
+                <h1>Create Account</h1>
+                <p>Join the Ovencraft community</p>
+            </div>
+            
+            {% if error %}
+            <div class="alert alert-danger">
+                {{ error }}
+            </div>
+            {% endif %}
+            
+            <form id="registerForm" class="register-form">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="username">Username <span class="required">*</span></label>
+                            <input type="text" id="username" name="username" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="email">Email Address <span class="required">*</span></label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="full_name" class="form-control">
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="password">Password <span class="required">*</span></label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                            <small class="form-text text-muted">Must be at least 8 characters long</small>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+                            <input type="password" id="confirmPassword" name="confirm_password" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bio">About You</label>
+                    <textarea id="bio" name="bio" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="agreeTerms" required>
+                    <label class="form-check-label" for="agreeTerms">
+                        I agree to the <a href="{% url 'privacy-policy' %}">Terms and Privacy Policy</a>
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-custom-primary btn-block">Create Account</button>
+                </div>
+            </form>
+            
+            <div class="register-footer">
+                <p>Already have an account? <a href="{% url 'login' %}">Sign In</a></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const registerForm = document.getElementById('registerForm');
+    
+    registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+        
+        // Check if passwords match
+        if (password !== confirmPassword) {
+            showError('Passwords do not match');
+            return;
+        }
+        
+        // Check password length
+        if (password.length < 8) {
+            showError('Password must be at least 8 characters long');
+            return;
+        }
+        
+        // Get form data
+        const formData = {
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            full_name: document.getElementById('fullName').value,
+            password: password,
+            confirm_password: confirmPassword,
+            bio: document.getElementById('bio').value
+        };
+        
+        // Submit registration request
+        fetch('/api/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            return response.json().then(data => {
+                throw new Error(data.detail || 'Registration failed');
+            });
+        })
+        .then(data => {
+            // Show success and redirect to login
+            showSuccess('Account created successfully! Redirecting to login...');
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 2000);
+        })
+        .catch(error => {
+            showError(error.message);
+        });
+    });
+    
+    function showError(message) {
+        // Remove any existing alerts
+        removeAlerts();
+        
+        // Create error alert
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'alert alert-danger';
+        errorDiv.textContent = message;
+        
+        // Insert before the form
+        const header = document.querySelector('.register-header');
+        header.parentNode.insertBefore(errorDiv, header.nextSibling);
+    }
+    
+    function showSuccess(message) {
+        // Remove any existing alerts
+        removeAlerts();
+        
+        // Create success alert
+        const successDiv = document.createElement('div');
+        successDiv.className = 'alert alert-success';
+        successDiv.textContent = message;
+        
+        // Insert before the form
+        const header = document.querySelector('.register-header');
+        header.parentNode.insertBefore(successDiv, header.nextSibling);
+    }
+    
+    function removeAlerts() {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => alert.remove());
+    }
+});
+</script>
+{% endblock %}

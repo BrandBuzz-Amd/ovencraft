@@ -1,0 +1,596 @@
+{% load static %}
+{% extends "base.html" %}
+{% block extra_css %}
+<link href="{% static '/css/faq.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- FAQ Hero Section -->
+<section class="faq-hero-section">
+    <div class="container">
+        <div class="faq-hero-content">
+            <h1 class="faq-hero-title">Frequently Asked Questions</h1>
+            <p class="faq-hero-description">
+                Find answers to common questions about our woodfire ovens, cooking techniques, and services.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Navigation -->
+<section class="faq-nav-section">
+    <div class="container">
+        <div class="faq-nav-container">
+            <button class="faq-nav-item active" data-category="all">All Questions</button>
+            <button class="faq-nav-item" data-category="product">Products</button>
+            <button class="faq-nav-item" data-category="installation">Installation</button>
+            <button class="faq-nav-item" data-category="usage">Usage & Cooking</button>
+            <button class="faq-nav-item" data-category="maintenance">Maintenance</button>
+            <button class="faq-nav-item" data-category="ordering">Ordering & Shipping</button>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Content Section -->
+<section class="faq-content-section">
+    <div class="container">
+        <div class="faq-container">
+            <!-- Product Information FAQs -->
+            <div class="faq-group" id="product-faqs">
+                <h2 class="faq-group-title">Product Information</h2>
+                
+                <div class="faq-item" data-category="product">
+                    <div class="faq-question">
+                        <h3>What makes your woodfire ovens different from others?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our woodfire ovens are crafted with premium refractory materials that offer superior heat retention and distribution. Each oven is handcrafted by skilled artisans with decades of experience, resulting in exceptional quality and durability. We also offer customizable features and finishes to match your specific needs and aesthetic preferences.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="product">
+                    <div class="faq-question">
+                        <h3>What are the different models available?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We offer three main models:</p>
+                        <ul>
+                            <li><strong>Classic Woodfire:</strong> Traditional design with modern features, ideal for home use.</li>
+                            <li><strong>Artisan Pro:</strong> Premium model with larger cooking surface and enhanced heat retention, perfect for serious home chefs and small restaurants.</li>
+                            <li><strong>Portable Flame:</strong> Compact design for versatility and mobility, great for patios, tailgating, and outdoor events.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="product">
+                    <div class="faq-question">
+                        <h3>What materials are your ovens made from?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our ovens are constructed using a combination of high-quality materials:</p>
+                        <ul>
+                            <li>Premium refractory bricks for the cooking floor</li>
+                            <li>High-alumina refractory cement for superior heat resistance</li>
+                            <li>Multiple layers of ceramic fiber insulation</li>
+                            <li>Stainless steel or powder-coated steel exteriors</li>
+                            <li>Custom finishes including brick, stone, or tile exteriors (available on select models)</li>
+                        </ul>
+                        <p>These materials are carefully selected to maximize heat retention, cooking performance, and durability in outdoor environments.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="product">
+                    <div class="faq-question">
+                        <h3>How long do your ovens last?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>With proper care and maintenance, our woodfire ovens are built to last for decades. Many of our customers have been using their ovens for 15+ years with no reduction in performance. We stand behind our craftsmanship with industry-leading warranties:</p>
+                        <ul>
+                            <li>Classic Woodfire: 3-year warranty</li>
+                            <li>Artisan Pro: 5-year warranty</li>
+                            <li>Portable Flame: 2-year warranty</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="product">
+                    <div class="faq-question">
+                        <h3>What type of wood should I use in my oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We recommend using seasoned hardwoods for the best cooking results. Oak, maple, hickory, and fruit woods (apple, cherry) are excellent choices. These woods burn hot, clean, and impart subtle flavors to your food.</p>
+                        <p>Avoid using:</p>
+                        <ul>
+                            <li>Softwoods like pine or spruce (they produce too much soot and can impart unpleasant flavors)</li>
+                            <li>Treated or painted wood (contains harmful chemicals)</li>
+                            <li>Damp or green wood (difficult to burn and produces excessive smoke)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Installation & Setup FAQs -->
+            <div class="faq-group" id="installation-faqs">
+                <h2 class="faq-group-title">Installation & Setup</h2>
+                
+                <div class="faq-item" data-category="installation">
+                    <div class="faq-question">
+                        <h3>Do I need a professional to install my oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For our Classic Woodfire and Artisan Pro models, professional installation is recommended due to their weight and the need for a proper foundation. These models typically require concrete slabs and may need to comply with local building codes.</p>
+                        <p>Our Portable Flame model requires no installation and can be placed on any stable, heat-resistant surface. It comes fully assembled and ready to use right out of the box.</p>
+                        <p>We offer installation services in select regions, and can recommend certified installers for customers outside our service areas.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="installation">
+                    <div class="faq-question">
+                        <h3>What kind of foundation do I need for my oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For permanent installations, we recommend a reinforced concrete slab that extends at least 6 inches beyond the footprint of the oven in all directions. The slab should be at least 4-6 inches thick and properly cured before installation.</p>
+                        <p>Alternatively, our ovens can be installed on existing stone or concrete patios if they meet weight capacity requirements. For specific foundation recommendations based on your model and location, please consult with our installation team.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="installation">
+                    <div class="faq-question">
+                        <h3>Do I need a permit to install a woodfire oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Permit requirements vary by location. In many municipalities, permanent outdoor structures like woodfire ovens may require building permits, especially if they include foundations, electrical components, or gas connections.</p>
+                        <p>We recommend checking with your local building department before installation. Our customer service team can provide the technical specifications you'll need for permit applications, and our professional installation partners can often assist with permit processes.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="installation">
+                    <div class="faq-question">
+                        <h3>Can I install my oven indoors?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, our ovens can be installed indoors with proper ventilation and chimney systems. Indoor installations require specialized design considerations including:</p>
+                        <ul>
+                            <li>A professional-grade ventilation system designed for woodfire cooking</li>
+                            <li>Proper clearances from combustible materials</li>
+                            <li>Compliance with local building codes and fire regulations</li>
+                            <li>Professional installation by certified contractors</li>
+                        </ul>
+                        <p>Indoor installations typically require additional permits and inspections. Our design team can create custom specifications for indoor installations and recommend qualified installation partners.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="installation">
+                    <div class="faq-question">
+                        <h3>How far should my oven be from structures and trees?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We recommend maintaining the following minimum clearances:</p>
+                        <ul>
+                            <li>At least 10 feet from any combustible structure (wooden decks, pergolas, etc.)</li>
+                            <li>At least 15 feet from overhead tree branches</li>
+                            <li>At least 5 feet from non-combustible structures (stone walls, etc.)</li>
+                        </ul>
+                        <p>Local building codes may have additional requirements, so always check with your local authorities. Proper chimney height and spark arrestors can also help minimize fire risks.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Usage & Cooking FAQs -->
+            <div class="faq-group" id="usage-faqs">
+                <h2 class="faq-group-title">Usage & Cooking</h2>
+                
+                <div class="faq-item" data-category="usage">
+                    <div class="faq-question">
+                        <h3>What can I cook in a woodfire oven besides pizza?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>While our ovens excel at making perfect pizzas, they're incredibly versatile cooking tools. Here are just a few things you can cook:</p>
+                        <ul>
+                            <li>Artisan breads and flatbreads</li>
+                            <li>Roasted meats and vegetables</li>
+                            <li>Baked fish and seafood</li>
+                            <li>Casseroles and gratins</li>
+                            <li>Desserts like pies, tarts, and cookies</li>
+                            <li>Slow-cooked stews and braises</li>
+                        </ul>
+                        <p>The high heat and unique cooking environment create flavors and textures that simply can't be achieved in conventional ovens.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="usage">
+                    <div class="faq-question">
+                        <h3>How long does it take to heat up a woodfire oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Heating times vary by model:</p>
+                        <ul>
+                            <li><strong>Classic Woodfire:</strong> Approximately 45 minutes to reach optimal cooking temperature (750-850°F).</li>
+                            <li><strong>Artisan Pro:</strong> About 30 minutes due to enhanced insulation and design.</li>
+                            <li><strong>Portable Flame:</strong> Just 20 minutes to reach cooking temperature, thanks to its smaller size and efficient design.</li>
+                        </ul>
+                        <p>These times can vary slightly based on ambient temperature, fuel quality, and other conditions.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="usage">
+                    <div class="faq-question">
+                        <h3>How do I know when my oven is at the right temperature?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>There are several ways to gauge your oven's temperature:</p>
+                        <ol>
+                            <li><strong>Infrared thermometer:</strong> The most accurate method, pointing a quality infrared thermometer at the cooking surface will give you precise temperature readings.</li>
+                            <li><strong>Visual indicators:</strong> When properly heated, the soot on the dome will burn off, leaving it light in color. This typically indicates temperatures above 700°F.</li>
+                            <li><strong>Flour test:</strong> Sprinkle a small amount of flour on the cooking surface. At optimal pizza temperatures (750-850°F), the flour should brown in about 10 seconds without burning immediately.</li>
+                            <li><strong>Built-in thermometers:</strong> Some of our models feature built-in temperature gauges for easy monitoring.</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="usage">
+                    <div class="faq-question">
+                        <h3>Can I use my oven in all weather conditions?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our ovens are built to withstand outdoor conditions and can be used year-round, though there are some considerations:</p>
+                        <ul>
+                            <li><strong>Rain and snow:</strong> The ovens themselves are water-resistant, but we recommend using them under some form of shelter (pergola, awning, etc.) for comfort during inclement weather.</li>
+                            <li><strong>Extreme cold:</strong> In sub-freezing temperatures, you may need longer heating times and more fuel to maintain proper cooking temperatures.</li>
+                            <li><strong>Wind:</strong> Strong winds can affect flame patterns and temperature consistency. A windbreak or strategic placement can help mitigate these effects.</li>
+                            <li><strong>Humidity:</strong> High humidity can impact cooking times slightly but won't damage the oven.</li>
+                        </ul>
+                        <p>For optimal performance in all seasons, consider one of our custom enclosures or shelters designed specifically for our woodfire ovens.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="usage">
+                    <div class="faq-question">
+                        <h3>How many pizzas can I cook at once?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The number of pizzas you can cook simultaneously depends on the model:</p>
+                        <ul>
+                            <li><strong>Classic Woodfire 36":</strong> 2-3 medium (12") pizzas</li>
+                            <li><strong>Artisan Pro 42":</strong> 4-5 medium pizzas</li>
+                            <li><strong>Portable Flame 24":</strong> 1 medium pizza</li>
+                        </ul>
+                        <p>For optimal results when cooking multiple pizzas, rotate them during cooking to ensure even browning, and maintain a consistent flame to keep the oven temperature steady.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Maintenance & Care FAQs -->
+            <div class="faq-group" id="maintenance-faqs">
+                <h2 class="faq-group-title">Maintenance & Care</h2>
+                
+                <div class="faq-item" data-category="maintenance">
+                    <div class="faq-question">
+                        <h3>How do I clean and maintain my woodfire oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Regular maintenance is simple:</p>
+                        <ol>
+                            <li>After each use, allow the oven to cool completely.</li>
+                            <li>Remove ash and debris using a brass brush and metal scoop (avoid steel brushes as they can damage the cooking surface).</li>
+                            <li>For tough spots, use a damp cloth once the oven is cool.</li>
+                            <li>Periodically check the exterior and chimney for any signs of wear or damage.</li>
+                        </ol>
+                        <p>We recommend a deep clean every 3-6 months depending on usage. Our maintenance kit includes all the tools needed for proper care of your oven.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="maintenance">
+                    <div class="faq-question">
+                        <h3>Do I need to cover my oven when not in use?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we strongly recommend using a weather-resistant cover when the oven is not in use. While our ovens are built to withstand outdoor conditions, a cover provides additional protection against severe weather, UV exposure, and debris.</p>
+                        <p>Each of our models has a custom-fitted cover available as an accessory. These covers are made from durable, waterproof materials designed to extend the life and maintain the appearance of your oven.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="maintenance">
+                    <div class="faq-question">
+                        <h3>How do I prevent cracking in my woodfire oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>To prevent cracking in your woodfire oven, follow these best practices:</p>
+                        <ol>
+                            <li><strong>Proper curing:</strong> When first using your oven, follow the curing instructions carefully. This typically involves a series of small fires over several days to gradually dry out any moisture in the materials.</li>
+                            <li><strong>Gradual heating:</strong> Always heat your oven gradually. Start with a small fire and slowly build it up over 30-45 minutes.</li>
+                            <li><strong>Protect from moisture:</strong> Use a cover when the oven is not in use to prevent water infiltration.</li>
+                            <li><strong>Avoid thermal shock:</strong> Never pour water on hot surfaces or rapidly cool the oven.</li>
+                            <li><strong>Maintain the finish:</strong> Keep any exterior finishes in good repair to prevent water penetration.</li>
+                        </ol>
+                        <p>Minor hairline cracks are normal in refractory materials and don't affect performance. If you notice larger cracks, contact our customer service for guidance.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="maintenance">
+                    <div class="faq-question">
+                        <h3>How do I maintain the cooking surface?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>The cooking surface (hearth) of your oven requires specific care:</p>
+                        <ul>
+                            <li>Clean with a natural fiber brush to remove food particles and ash after each use</li>
+                            <li>For stuck-on food, wait until the oven cools, then lightly scrape with a wooden scraper</li>
+                            <li>Never use water or cleaning chemicals on a hot cooking surface</li>
+                            <li>If necessary, you can lightly dampen a cloth with water to wipe the surface when the oven is completely cool</li>
+                            <li>The natural seasoning that develops over time improves cooking performance, so avoid deep cleaning unless absolutely necessary</li>
+                        </ul>
+                        <p>Over time, the cooking surface will develop a natural patina that enhances its non-stick properties and contributes to better heat distribution.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="maintenance">
+                    <div class="faq-question">
+                        <h3>What should I do if my oven gets wet inside?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>If water gets inside your oven, follow these steps:</p>
+                        <ol>
+                            <li>Remove any standing water using towels or a shop vacuum.</li>
+                            <li>Allow the oven to air dry naturally for at least 24-48 hours with the door open.</li>
+                            <li>Once the oven appears dry, conduct a gradual curing process:
+                                <ul>
+                                    <li>Day 1: Build a very small fire and maintain it for 1-2 hours</li>
+                                    <li>Day 2: Build a slightly larger fire for 2-3 hours</li>
+                                    <li>Day 3: Normal fire for 3-4 hours</li>
+                                </ul>
+                            </li>
+                        </ol>
+                        <p>This gradual approach allows moisture trapped in the refractory materials to escape slowly, preventing steam pressure and potential cracking. Never attempt to rapidly dry out a wet oven with a large fire.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ordering & Shipping FAQs -->
+            <div class="faq-group" id="ordering-faqs">
+                <h2 class="faq-group-title">Ordering & Shipping</h2>
+                
+                <div class="faq-item" data-category="ordering">
+                    <div class="faq-question">
+                        <h3>How do I order a woodfire oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Ordering one of our woodfire ovens is simple:</p>
+                        <ol>
+                            <li><strong>Online:</strong> Browse our products on our website and place your order directly through our secure checkout system.</li>
+                            <li><strong>Phone:</strong> Call our customer service team at (555) 123-4567 to place an order with a sales representative.</li>
+                            <li><strong>Showroom:</strong> Visit one of our showroom locations to see the ovens in person and place an order with our staff.</li>
+                            <li><strong>Custom Orders:</strong> For custom designs or commercial orders, please contact our design team through the Custom Request form on our website.</li>
+                        </ol>
+                        <p>After placing your order, you'll receive an order confirmation with estimated delivery dates and next steps for installation planning.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="ordering">
+                    <div class="faq-question">
+                        <h3>What payment methods do you accept?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We accept the following payment methods:</p>
+                        <ul>
+                            <li>All major credit cards (Visa, Mastercard, American Express, Discover)</li>
+                            <li>PayPal</li>
+                            <li>Bank wire transfers</li>
+                            <li>Financing through Affirm (subject to credit approval)</li>
+                        </ul>
+                        <p>For commercial orders, we also offer net-30 terms for qualified businesses with established credit.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="ordering">
+                    <div class="faq-question">
+                        <h3>How are your ovens shipped?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our shipping process is designed to ensure your oven arrives in perfect condition:</p>
+                        <ul>
+                            <li>All ovens are carefully crated with comprehensive protective packaging.</li>
+                            <li>Permanent models (Classic and Artisan) are shipped via freight carrier on pallets.</li>
+                            <li>The Portable Flame model can be shipped via UPS/FedEx Ground.</li>
+                            <li>For international shipments, we handle all customs documentation and work with established global carriers.</li>
+                        </ul>
+                        <p>Before delivery, our logistics team will contact you to schedule a convenient delivery date and time. For freight deliveries, please ensure adequate access for a large truck and assistance for offloading if necessary.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="ordering">
+                    <div class="faq-question">
+                        <h3>Do you ship internationally?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we ship our woodfire ovens worldwide. International shipping considerations include:</p>
+                        <ul>
+                            <li>Additional shipping costs based on destination</li>
+                            <li>Import duties and taxes that may be charged upon arrival (these vary by country and are the responsibility of the customer)</li>
+                            <li>Extended delivery timelines (typically 3-6 weeks depending on destination)</li>
+                            <li>Special crating for international transit</li>
+                        </ul>
+                        <p>Our international shipping department can provide a detailed quote including estimated delivery timelines for your specific location. For some regions, we work with local distribution partners who can facilitate easier delivery and installation.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="ordering">
+                    <div class="faq-question">
+                        <h3>What is your return policy?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our return policy is designed with customer satisfaction in mind:</p>
+                        <ul>
+                            <li>Portable Flame ovens can be returned within 30 days if unused and in original packaging.</li>
+                            <li>For permanent installation models (Classic and Artisan), cancellations are accepted up until shipping for a full refund minus a 10% design and processing fee.</li>
+                            <li>Custom-designed ovens are non-refundable once production begins.</li>
+                            <li>Warranty claims are handled through our customer service department and may result in repair, replacement, or partial refund depending on the nature of the issue.</li>
+                        </ul>
+                        <p>All returns require a Return Merchandise Authorization (RMA) number from our customer service team. Return shipping costs are the responsibility of the customer except in cases of warranty issues or our error.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Still Have Questions? -->
+        <div class="still-questions-section">
+            <div class="still-questions-container">
+                <h2>Still Have Questions?</h2>
+                <p>We're here to help! Our customer support team is standing by to assist you with any additional questions or concerns.</p>
+                <div class="contact-options">
+                    <a href="{% url 'contact' %}" class="btn btn-custom-primary">Contact Us</a>
+                    <div class="contact-method">
+                        <i class="bi bi-telephone"></i>
+                        <span>Call us at: (555) 123-4567</span>
+                    </div>
+                    <div class="contact-method">
+                        <i class="bi bi-envelope"></i>
+                        <span>Email: support@mywebsite.com</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ Accordion functionality
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all open items
+                document.querySelectorAll('.faq-item.active').forEach(item => {
+                    item.classList.remove('active');
+                    const icon = item.querySelector('.faq-icon i');
+                    icon.classList.remove('bi-dash');
+                    icon.classList.add('bi-plus');
+                });
+                
+                // Open the clicked item if it wasn't already open
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                    const icon = question.querySelector('.faq-icon i');
+                    icon.classList.remove('bi-plus');
+                    icon.classList.add('bi-dash');
+                }
+            });
+        });
+        
+        // FAQ Category Filtering
+        const navButtons = document.querySelectorAll('.faq-nav-item');
+        const faqItems = document.querySelectorAll('.faq-item');
+        const faqGroups = document.querySelectorAll('.faq-group');
+        
+        navButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Update active button
+                navButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                const category = button.getAttribute('data-category');
+                
+                // Show/hide items based on category
+                if (category === 'all') {
+                    // Show all items and groups
+                    faqItems.forEach(item => {
+                        item.style.display = 'block';
+                    });
+                    faqGroups.forEach(group => {
+                        group.style.display = 'block';
+                    });
+                } else {
+                    // Show only matching items
+                    faqItems.forEach(item => {
+                        if (item.getAttribute('data-category') === category) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    
+                    // Show/hide groups based on whether they have any visible items
+                    faqGroups.forEach(group => {
+                        const hasVisibleItems = Array.from(group.querySelectorAll('.faq-item'))
+                            .some(item => item.style.display !== 'none');
+                        
+                        if (hasVisibleItems) {
+                            group.style.display = 'block';
+                        } else {
+                            group.style.display = 'none';
+                        }
+                    });
+                }
+                
+                // Scroll to content
+                document.querySelector('.faq-content-section').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+        
+        // Initialize by showing all FAQs
+        document.querySelector('.faq-nav-item[data-category="all"]').click();
+        
+        // URL Hash Navigation
+        function handleHashNavigation() {
+            const hash = window.location.hash;
+            if (hash) {
+                const targetId = hash.substring(1); // Remove the # character
+                const targetGroup = document.getElementById(targetId);
+                
+                if (targetGroup) {
+                    // Show the appropriate category
+                    const category = targetGroup.querySelector('.faq-item').getAttribute('data-category');
+                    document.querySelector(`.faq-nav-item[data-category="${category}"]`).click();
+                    
+                    // Scroll to the specific group with offset for the sticky navbar
+                    setTimeout(() => {
+                        const yOffset = -100; // Adjust based on your navbar height
+                        const y = targetGroup.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                        window.scrollTo({top: y, behavior: 'smooth'});
+                    }, 300);
+                }
+            }
+        }
+        
+        // Handle hash navigation on page load
+        handleHashNavigation();
+        
+        // Handle hash changes during navigation
+        window.addEventListener('hashchange', handleHashNavigation);
+    });
+
+</script>
+{% endblock %}

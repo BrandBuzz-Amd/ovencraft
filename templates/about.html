@@ -1,0 +1,747 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra_css %}
+<link href="{% static 'css/about.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="about-hero-section">
+    <div class="container">
+        <div class="about-hero-content">
+            <h1 class="about-hero-title">Our Story</h1>
+            <p class="about-hero-description">
+                Experience the Art of Wood-Fired Perfection with Ovencraft.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Our Mission Section -->
+<section class="mission-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div class="mission-image">
+                     {% load static %}
+                     <img src="{% static 'images/team_togather.jpg' %}" alt="Artisan Creating Woodfire Oven">
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="mission-content">
+                    <h2>Our Mission</h2>
+                    <p>
+                        At Ovencraft, we're passionate about blending traditional pizza-making with modern innovation. Our mission is to craft exceptional wood and gas-fired ovens that bring authentic culinary experiences to both home cooks and professionals.
+                    </p>
+                    <p>
+                        We believe that the distinctive flavor and experience of wood-fired cooking should be accessible to everyone who appreciates quality food. Each oven we create combines traditional craftsmanship with contemporary features that enhance both performance and aesthetic appeal.
+                    </p>
+                    <p>
+                        Every Ovencraft product is built with meticulous attention to detail, using only premium materials to ensure superior heat retention, cooking performance, and longevity that will serve you for years to come.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Video Showcase Section -->
+<section class="video-showcase-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">See Our Craft in Action</h2>
+            <p class="section-subheading">
+                Watch how we create exceptional wood-fired and gas-fired ovens with passion and precision.
+            </p>
+        </div>
+        
+        <div class="video-container">
+            <div class="video-wrapper">
+                <!-- Replace the src with your actual video URL -->
+                <video id="showcase-video" poster="https://images.unsplash.com/photo-1544304899-31dc74e751ba?q=80&w=1200&auto=format&fit=crop" controls>
+                    <source src="https://ovencraft.in/wp-content/uploads/2024/12/4457933-uhd_3840_2160_24fps.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-play-button" id="video-play-btn">
+                    <i class="bi bi-play-fill"></i>
+                </div>
+            </div>
+            
+            <div class="video-info">
+                <h3>The Art of Brick Oven Creation</h3>
+                <p>This exclusive behind-the-scenes video showcases our meticulous crafting process. From selecting premium materials to the final quality tests, discover how we blend traditional techniques with modern innovation to create ovens that deliver exceptional cooking experiences.</p>
+                <div class="video-stats">
+                    <div class="video-stat-item">
+                        <i class="bi bi-clock"></i>
+                        <span>4:32</span>
+                    </div>
+                    <div class="video-stat-item">
+                        <i class="bi bi-calendar3"></i>
+                        <span>February 2025</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<!-- Our Journey Timeline -->
+<section class="journey-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Our Journey</h2>
+            <p class="section-subheading">
+                From shared passion to crafting excellence
+            </p>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2021</div>
+                    <h3>The Beginning</h3>
+                    <p>Founders Aryan Rathod and Ayush Panchal began experimenting with oven designs, driven by their shared passion for authentic wood-fired cuisine.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2022</div>
+                    <h3>First Prototype</h3>
+                    <p>After extensive research and testing, the first Ovencraft prototype was developed, combining traditional methods with innovative materials.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2022</div>
+                    <h3>Market Testing</h3>
+                    <p>Our initial designs received enthusiastic feedback from local chefs and cooking enthusiasts, validating our approach to oven design.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2023</div>
+                    <h3>Official Launch</h3>
+                    <p>Ovencraft officially launched with our first commercial line of wood and gas-fired brick ovens for both residential and commercial use.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2024</div>
+                    <h3>Expanded Range</h3>
+                    <p>We introduced our fornomio series featuring the Culinary Canvas 29, Fusion Flare 36, and Signature Select 42 models.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">Present</div>
+                    <h3>Growing Community</h3>
+                    <p>Today, we continue to refine our designs while building a community of passionate wood-fired cooking enthusiasts across the country.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date">2025</div>
+                    <h3>Coming Soon</h3>
+                    <p>Launching our new range of ovens in 2025</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Our Values Section -->
+<section class="values-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Our Values</h2>
+            <p class="section-subheading">
+                The principles that guide everything we do
+            </p>
+        </div>
+        
+        <div class="values-grid">
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="bi bi-award"></i>
+                </div>
+                <h3>Craftsmanship</h3>
+                <p>We believe in meticulous attention to detail and take pride in the quality of our work, ensuring every oven meets our high standards for performance and durability.</p>
+            </div>
+            
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="bi bi-lightning"></i>
+                </div>
+                <h3>Innovation</h3>
+                <p>While respecting tradition, we constantly seek new ways to improve our designs, materials, and manufacturing processes to enhance the cooking experience.</p>
+            </div>
+            
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="bi bi-tree"></i>
+                </div>
+                <h3>Customer Experience</h3>
+                <p>We're dedicated to providing exceptional service at every touchpoint, from consultation and customization to installation and ongoing support.</p>
+            </div>
+            
+            <div class="value-item">
+                <div class="value-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+                <h3>Community</h3>
+                <p>We foster a community of food enthusiasts through our workshops and support, sharing knowledge and celebrating the joy of wood-fired cooking together.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Team Section -->
+<section class="team-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Our Founders</h2>
+            <p class="section-subheading">
+                The passionate people behind our exceptional products
+            </p>
+        </div>
+        
+        <div class="team-grid">
+            <!-- Founder 1 -->
+            <div class="team-card">
+                <div class="team-image">
+                     {% load static %}
+                     <img src="{% static 'images/team/1.jpg' %}" alt="Ayush Panchal">
+                </div>
+                <div class="team-info">
+                    <h3>Ayush Panchal</h3>
+                </div>
+            </div>
+            
+            <!-- Founder 2 -->
+            <div class="team-card">
+                <div class="team-image">
+                     {% load static %}
+                     <img src="{% static 'images/team/2.jpg' %}" alt="Aryan Rathod">
+                </div>
+                <div class="team-info">
+                    <h3>Aryan Rathod</h3>
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</section>
+
+
+<!-- Customers Testimonial Section -->
+<section id="testimonials" class="testimonial-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">What Our Customers Say</h2>
+            <p class="section-subheading">
+                Join our community of passionate cooks who have elevated their culinary experience with our fire brick ovens.
+            </p>
+        </div>
+        
+        <div class="testimonial-carousel">
+            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Testimonial 1"></button>
+                    <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="1" aria-label="Testimonial 2"></button>
+                    <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="2" aria-label="Testimonial 3"></button>
+                </div>
+                
+                <div class="carousel-inner">
+                    <!-- Testimonial 1 -->
+                    <div class="carousel-item active">
+                        <div class="testimonial-content">
+                            <div class="testimonial-card">
+                                
+                                <p class="testimonial-text">
+                                    We couldn’t be happier with our experience with Ovencraft! They crafted a beautiful clay oven for our Middle Eastern restaurant, Sarây by Tanoor, and the results have been nothing short of amazing. The oven delivers incredible performance, helping us achieve authentic flavors that our menu demands.
+
+What truly sets Ovencraft apart is their exceptional after-sales service. They’ve been proactive, responsive, and supportive throughout, ensuring we get the most out of our investment. Highly recommend them to anyone looking for top-quality craftsmanship and reliable service!
+                                </p>
+                                <div class="testimonial-author">
+                                    <div class="author-image">
+                                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah Johnson">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Tanoor</h4>
+                                        <div class="testimonial-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="carousel-item">
+                        <div class="testimonial-content">
+                            <div class="testimonial-card">
+                                
+                                <p class="testimonial-text">
+                                    We had the pleasure of visiting Ovencraft to see their wood-fired pizza ovens in action, and we were thoroughly impressed. The ovens are beautifully crafted with high-quality materials, showcasing the company’s dedication to excellence.
+
+While at their location, we had the opportunity to test a pizza made in one of their ovens, and it was absolutely delicious! The perfect crust, smoky flavor, and even cooking truly highlighted the superior performance of their ovens.
+
+The team at Ovencraft was welcoming, knowledgeable, and passionate about their work. If you’re looking for a top-notch wood-fired pizza oven, Ovencraft is definitely worth considering.
+                                </p>
+                                <div class="testimonial-author">
+                                    <div class="author-image">
+                                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="David Chen">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Jay Panchal</h4>
+                                        <div class="testimonial-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="carousel-item">
+                        <div class="testimonial-content">
+                            <div class="testimonial-card">
+                                
+                                <p class="testimonial-text">
+                                    Ovencraft has completely transformed my baking experience! The quality and precision of their products are outstanding. From cakes to cookies, everything turns out perfect every time. Highly recommended for all baking enthusiasts!
+                                </p>
+                                <div class="testimonial-author">
+                                    <div class="author-image">
+                                        <img src="https://randomuser.me/api/portraits/women/67.jpg" alt="Michelle Rodriguez">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Happy Dobariya</h4>
+                                        <div class="testimonial-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                    <span class="carousel-custom-control">
+                        <i class="bi bi-chevron-left"></i>
+                    </span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                    <span class="carousel-custom-control">
+                        <i class="bi bi-chevron-right"></i>
+                    </span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Advanced Gallery Section -->
+<!-- <section id="gallery" class="gallery-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Our Gallery</h2>
+            <p class="section-subheading">
+                Explore our collection of stunning woodfire ovens and the culinary masterpieces they create.
+                From perfect pizzas to artisan breads, see what's possible with our premium ovens.
+            </p>
+        </div>
+        
+        <div class="gallery-filter">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="ovens">Ovens</button>
+            <button class="filter-btn" data-filter="food">Culinary Creations</button>
+            <button class="filter-btn" data-filter="installations">Installations</button>
+        </div>
+        
+        <div class="gallery-grid">
+            <div class="gallery-item" data-category="ovens">
+                <div class="gallery-item-inner">
+                    <img src="https://images.unsplash.com/photo-1575377427642-087cf684f29d?q=80&w=800&auto=format&fit=crop" alt="Classic Woodfire Oven" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Classic Woodfire Oven</h3>
+                            <p>Traditional design with modern features</p>
+                            <a href="#" class="gallery-zoom"><i class="bi bi-zoom-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="food">
+                <div class="gallery-item-inner">
+                    <img src="https://images.unsplash.com/photo-1599458252573-56ae36120de1?q=80&w=800&auto=format&fit=crop" alt="Neapolitan Pizza" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Authentic Neapolitan Pizza</h3>
+                            <p>Perfectly cooked at 900°F in just 90 seconds</p>
+                            <a href="#" class="gallery-zoom"><i class="bi bi-zoom-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="installations">
+                <div class="gallery-item-inner">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?q=80&w=800&auto=format&fit=crop" alt="Outdoor Kitchen Installation" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Luxury Outdoor Kitchen</h3>
+                            <p>Custom installation with premium finishes</p>
+                            <a href="#" class="gallery-zoom"><i class="bi bi-zoom-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="ovens">
+                <div class="gallery-item-inner">
+                    <img src="https://images.unsplash.com/photo-1601924582970-9238bcb495d9?q=80&w=800&auto=format&fit=crop" alt="Artisan Pro Oven" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Artisan Pro Series</h3>
+                            <p>Our premium woodfire oven with enhanced features</p>
+                            <a href="#" class="gallery-zoom"><i class="bi bi-zoom-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="food">
+                <div class="gallery-item-inner">
+                    <img src="https://images.unsplash.com/photo-1600628421055-4d30de868b8f?q=80&w=800&auto=format&fit=crop" alt="Artisan Bread" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Artisan Sourdough Bread</h3>
+                            <p>Perfect crust and texture from wood-fired baking</p>
+                            <a href="#" class="gallery-zoom"><i class="bi bi-zoom-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="installations">
+                <div class="gallery-item-inner">
+                    <img src="https://images.unsplash.com/photo-1592861956120-e524fc739696?q=80&w=800&auto=format&fit=crop" alt="Restaurant Installation" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Commercial Installation</h3>
+                            <p>Restaurant-grade setup for high-volume cooking</p>
+                            <a href="#" class="gallery-zoom"><i class="bi bi-zoom-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="ovens">
+                <div class="gallery-item-inner">
+                    <img src="https://images.unsplash.com/photo-1592861956120-e524fc739696?q=80&w=800&auto=format&fit=crop" alt="Portable Woodfire Oven" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Portable Flame Series</h3>
+                            <p>Compact design for versatility and convenience</p>
+                            <a href="#" class="gallery-zoom"><i class="bi bi-zoom-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="gallery-item" data-category="food">
+                <div class="gallery-item-inner">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=800&auto=format&fit=crop" alt="Roasted Vegetables" class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Fire-Roasted Vegetables</h3>
+                            <p>Enhanced flavors through wood fire cooking</p>
+                            <a href="#" class="gallery-zoom"><i class="bi bi-zoom-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="lightbox-modal" id="lightbox">
+        <span class="lightbox-close"><i class="bi bi-x-lg"></i></span>
+        <img class="lightbox-content" id="lightbox-img">
+        <div class="lightbox-caption">
+            <h3 id="lightbox-title"></h3>
+            <p id="lightbox-description"></p>
+        </div>
+        <button class="lightbox-nav lightbox-prev"><i class="bi bi-chevron-left"></i></button>
+        <button class="lightbox-nav lightbox-next"><i class="bi bi-chevron-right"></i></button>
+    </div>
+</section> -->
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize AOS animations if available
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 1000,
+                once: true,
+                offset: 100
+            });
+        }
+        
+        // Countdown Timer functionality
+        function updateCountdown() {
+            // Set the date we're counting down to (15 days from now)
+            const countDownDate = new Date();
+            countDownDate.setDate(countDownDate.getDate() + 15);
+            
+            // Update the countdown every 1 second
+            const x = setInterval(function() {
+                // Get current date and time
+                const now = new Date().getTime();
+                
+                // Find the time remaining between now and the countdown date
+                const distance = countDownDate - now;
+                
+                // Time calculations for days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Display the results
+                document.getElementById("days").textContent = days < 10 ? '0' + days : days;
+                document.getElementById("hours").textContent = hours < 10 ? '0' + hours : hours;
+                document.getElementById("minutes").textContent = minutes < 10 ? '0' + minutes : minutes;
+                document.getElementById("seconds").textContent = seconds < 10 ? '0' + seconds : seconds;
+                
+                // If the count down is finished, clear interval and display message
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.querySelector(".countdown-timer").innerHTML = "Offer has expired!";
+                }
+            }, 1000);
+        }
+        
+        // Initialize countdown
+        updateCountdown();
+    });
+    </script>
+    
+    <!-- Add AOS Library (Animation On Scroll) if not already included in your base template -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+
+    <!-- jQuery and Custom JavaScript for Gallery Functionality -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter functionality
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterBtns.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                const filterValue = btn.getAttribute('data-filter');
+                
+                galleryItems.forEach(item => {
+                    if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                        item.style.display = 'block';
+                        setTimeout(() => {
+                            item.style.opacity = '1';
+                            item.style.transform = 'scale(1)';
+                        }, 50);
+                    } else {
+                        item.style.opacity = '0';
+                        item.style.transform = 'scale(0.8)';
+                        setTimeout(() => {
+                            item.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+        
+        // Lightbox functionality
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxTitle = document.getElementById('lightbox-title');
+        const lightboxDescription = document.getElementById('lightbox-description');
+        const lightboxClose = document.querySelector('.lightbox-close');
+        const lightboxPrev = document.querySelector('.lightbox-prev');
+        const lightboxNext = document.querySelector('.lightbox-next');
+        let currentIndex = 0;
+        let visibleItems = [];
+        
+        // Open lightbox
+        document.querySelectorAll('.gallery-zoom').forEach((item, index) => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Get only visible items
+                visibleItems = Array.from(galleryItems).filter(item => item.style.display !== 'none');
+                
+                // Find current index in visible items
+                const parentItem = this.closest('.gallery-item');
+                currentIndex = visibleItems.indexOf(parentItem);
+                
+                const img = parentItem.querySelector('.gallery-img');
+                const title = parentItem.querySelector('.gallery-info h3').textContent;
+                const description = parentItem.querySelector('.gallery-info p').textContent;
+                
+                lightboxImg.src = img.src;
+                lightboxTitle.textContent = title;
+                lightboxDescription.textContent = description;
+                
+                lightbox.style.display = 'flex';
+                setTimeout(() => {
+                    lightbox.style.opacity = '1';
+                }, 10);
+                
+                // Disable scrolling on body
+                document.body.style.overflow = 'hidden';
+            });
+        });
+        
+        // Close lightbox
+        lightboxClose.addEventListener('click', () => {
+            lightbox.style.opacity = '0';
+            setTimeout(() => {
+                lightbox.style.display = 'none';
+            }, 300);
+            
+            // Enable scrolling on body
+            document.body.style.overflow = 'auto';
+        });
+        
+        // Navigate through lightbox
+        lightboxNext.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % visibleItems.length;
+            updateLightbox();
+        });
+        
+        lightboxPrev.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
+            updateLightbox();
+        });
+        
+        function updateLightbox() {
+            const item = visibleItems[currentIndex];
+            const img = item.querySelector('.gallery-img');
+            const title = item.querySelector('.gallery-info h3').textContent;
+            const description = item.querySelector('.gallery-info p').textContent;
+            
+            // Animate transition
+            lightboxImg.style.opacity = '0';
+            lightboxTitle.style.opacity = '0';
+            lightboxDescription.style.opacity = '0';
+            
+            setTimeout(() => {
+                lightboxImg.src = img.src;
+                lightboxTitle.textContent = title;
+                lightboxDescription.textContent = description;
+                
+                lightboxImg.style.opacity = '1';
+                lightboxTitle.style.opacity = '1';
+                lightboxDescription.style.opacity = '1';
+            }, 300);
+        }
+        
+        // Close on clicking outside of image
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightboxClose.click();
+            }
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    lightboxClose.click();
+                } else if (e.key === 'ArrowRight') {
+                    lightboxNext.click();
+                } else if (e.key === 'ArrowLeft') {
+                    lightboxPrev.click();
+                }
+            }
+        });
+    });
+    </script>
+
+<!-- Video Play Button JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const video = document.getElementById('showcase-video');
+        const playButton = document.getElementById('video-play-btn');
+        
+        if (playButton && video) {
+            playButton.addEventListener('click', function() {
+                if (video.paused) {
+                    video.play();
+                    playButton.classList.add('playing');
+                } else {
+                    video.pause();
+                    playButton.classList.remove('playing');
+                }
+            });
+            
+            video.addEventListener('play', function() {
+                playButton.classList.add('playing');
+            });
+            
+            video.addEventListener('pause', function() {
+                playButton.classList.remove('playing');
+            });
+            
+            video.addEventListener('ended', function() {
+                playButton.classList.remove('playing');
+            });
+        }
+    });
+    </script>
+{% endblock %}

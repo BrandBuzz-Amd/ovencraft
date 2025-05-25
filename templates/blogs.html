@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .blog-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    .blog-card {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        width: 100%;
+        max-width: 350px;
+        display: flex;
+        flex-direction: column;
+    }
+    .blog-image img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+    .blog-content {
+        padding: 1rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .blog-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #333;
+        text-decoration: none;
+    }
+    .blog-excerpt {
+        flex-grow: 1;
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 1rem;
+    }
+    .stay-tuned-message {
+        margin-top: 3rem;
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+        font-size: 1.5rem;
+        color: #cc9955;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="container">
+    <h1>Our Blogs</h1>
+    <div class="blog-list">
+        {% for blog in blogs %}
+        <div class="blog-card">
+            <div class="blog-image">
+                {% if blog.featured_image %}
+                <img src="{{ blog.featured_image.url }}" alt="{{ blog.title }}">
+                {% else %}
+                <img src="https://via.placeholder.com/350x200?text=No+Image" alt="No Image">
+                {% endif %}
+            </div>
+            <div class="blog-content">
+                <a href="/blog/{{ blog.slug }}" class="blog-title">{{ blog.title }}</a>
+                <p class="blog-excerpt">{{ blog.excerpt|default:blog.content|striptags|truncatechars:150 }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p>No blogs available at the moment.</p>
+        {% endfor %}
+    </div>
+
+    <div class="stay-tuned-message">
+        Stay tuned for more updates
+    </div>
+</div>
+
+{% endblock %}

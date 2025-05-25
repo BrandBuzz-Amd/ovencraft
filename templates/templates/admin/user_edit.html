@@ -1,0 +1,222 @@
+{% load static %}
+{% extends "admin/base.html" %}
+
+{% block title %}Edit User - Admin Panel{% endblock %}
+
+{% block header_title %}Edit User{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h5 class="admin-card-title">
+                <i class="fas fa-user-edit"></i> Edit User: {{ user.username }}
+            </h5>
+            <a href="{% url 'admin_users' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Users
+            </a>
+        </div>
+        
+        <div class="admin-card-body">
+            {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-3 text-center mb-4">
+                    <div class="admin-user-avatar" style="width: 120px; height: 120px; margin: 0 auto 1rem auto;">
+                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=cc9955&color=fff&size=120" alt="{{ user.username }}">
+                    </div>
+                    
+                    <div style="font-weight: 600; margin-bottom: 0.5rem;">{{ user.username }}</div>
+                    <div style="color: var(--admin-primary); font-size: 0.9rem; margin-bottom: 1rem;">{{ user.role.value|title }}</div>
+                    
+                    <div style="color: var(--admin-text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">
+                        <i class="fas fa-calendar-alt"></i> Joined: {{ user.created_at.strftime('%b %d, %Y') }}
+                    </div>
+                    <div style="color: var(--admin-text-secondary); font-size: 0.875rem;">
+                        <i class="fas fa-envelope"></i> {{ user.email }}
+                    </div>
+                </div>
+                
+                <div class="col-md-9">
+                    <form method="POST" action="/admin/users/{{ user.id }}/edit" class="needs-validation" novalidate>
+                        <div class="row">
+                            <!-- Username -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="username" class="form-label">Username <span style="color: var(--admin-danger)">*</span></label>
+                                    <input type="text" id="username" name="username" class="form-control" required 
+                                          value="{{ user.username }}">
+                                    <div class="invalid-feedback">
+                                        Please provide a username.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Email -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email <span style="color: var(--admin-danger)">*</span></label>
+                                    <input type="email" id="email" name="email" class="form-control" required
+                                          value="{{ user.email }}">
+                                    <div class="invalid-feedback">
+                                        Please provide a valid email address.
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Full Name -->
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="full_name" class="form-label">Full Name</label>
+                                    <input type="text" id="full_name" name="full_name" class="form-control"
+                                          value="{{ user.full_name }}">
+                                </div>
+                            </div>
+                            
+                            <!-- Bio -->
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="bio" class="form-label">Bio</label>
+                                    <textarea id="bio" name="bio" class="form-control" rows="4">{{ user.bio }}</textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Change Password Section -->
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <label class="form-label">Password</label>
+                                        <button type="button" class="btn btn-sm btn-secondary" id="togglePasswordFields">
+                                            Change Password
+                                        </button>
+                                    </div>
+                                    <div id="passwordFields" style="display: none; margin-top: 1rem;">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="new_password" class="form-label">New Password</label>
+                                                    <input type="password" id="new_password" name="new_password" class="form-control">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="confirm_password" class="form-label">Confirm Password</label>
+                                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="role" class="form-label">Role <span style="color: var(--admin-danger)">*</span></label>
+                                    <select id="role" name="role" class="form-select" required>
+                                        {% for role in user_roles %}
+                                        <option value="{{ role.value }}" {% if user.role == role %}selected{% endif %}>
+                                            {{ role.value|title }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label d-block">Status</label>
+                                    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="is_active" id="statusActive" value="true"
+                                                {% if user.is_active %}checked{% endif %}>
+                                            <label class="form-check-label" for="statusActive">
+                                                Active
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="is_active" id="statusInactive" value="false"
+                                                {% if not user.is_active %}checked{% endif %}>
+                                            <label class="form-check-label" for="statusInactive">
+                                                Inactive
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="admin-card-footer" style="margin-top: 1rem; padding-left: 0; padding-right: 0;">
+                            <div class="d-flex gap-3">
+                                <a href="{% url 'admin_users' %}" class="btn btn-secondary">
+                                    <i class="fas fa-times"></i> Cancel
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Update User
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation
+(function () {
+    'use strict'
+    
+    var forms = document.querySelectorAll('.needs-validation')
+    
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            
+            // Password confirmation validation
+            var newPassword = document.getElementById('new_password')
+            var confirmPassword = document.getElementById('confirm_password')
+            
+            if (newPassword.value && newPassword.value !== confirmPassword.value) {
+                confirmPassword.setCustomValidity('Passwords do not match')
+                event.preventDefault()
+                event.stopPropagation()
+            } else {
+                confirmPassword.setCustomValidity('')
+            }
+            
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+
+// Toggle password fields
+document.getElementById('togglePasswordFields').addEventListener('click', function() {
+    var passwordFields = document.getElementById('passwordFields')
+    if (passwordFields.style.display === 'none') {
+        passwordFields.style.display = 'block'
+        this.textContent = 'Cancel Password Change'
+    } else {
+        passwordFields.style.display = 'none'
+        this.textContent = 'Change Password'
+        document.getElementById('new_password').value = ''
+        document.getElementById('confirm_password').value = ''
+    }
+})
+</script>
+{% endblock %}

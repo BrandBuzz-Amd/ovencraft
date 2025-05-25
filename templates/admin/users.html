@@ -1,0 +1,232 @@
+{% extends "admin/base.html" %}
+
+{% block title %}Users - Admin Panel{% endblock %}
+
+{% block header_title %}User Management{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h5 class="admin-card-title">
+                <i class="fas fa-users"></i> User Management
+            </h5>
+            <a href="/admin/users/create" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New User
+            </a>
+        </div>
+        
+        <div class="admin-card-body">
+            {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+            {% endif %}
+            
+            <!-- Search Form -->
+            <div class="row mb-4">
+                <div class="col-md-8">
+                    <form action="/admin/users" method="get" class="d-flex gap-3">
+                        <div style="flex: 1;">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Search users..."
+                                       value="{{ search if search else '' }}">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div>
+                            <select name="role" class="form-select">
+                                <option value="">All Roles</option>
+                                {% for role_option in user_roles %}
+                                <option value="{{ role_option.value }}" {% if role == role_option.value %}selected{% endif %}>
+                                    {{ role_option.value|title }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% if search or role %}
+                        <div>
+                            <a href="/admin/users" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Clear
+                            </a>
+                        </div>
+                        {% endif %}
+                    </form>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span style="color: var(--admin-text-secondary);">
+                        Showing {{ users|length }} of {{ total_users }} users
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Users Table -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="admin-user-avatar" style="width: 40px; height: 40px;">
+                                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=cc9955&color=fff" alt="{{ user.username }}">
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600;">{{ user.username }}</div>
+                                        {% if user.full_name %}
+                                        <div style="font-size: 0.875rem; color: var(--admin-text-secondary);">{{ user.full_name }}</div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.role.value == 'admin' %}
+                                <span class="badge bg-danger">Admin</span>
+                                {% elif user.role.value == 'editor' %}
+                                <span class="badge bg-info">Editor</span>
+                                {% else %}
+                                <span class="badge bg-secondary">User</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.is_active %}
+                                <span class="badge bg-success">Active</span>
+                                {% else %}
+                                <span class="badge bg-warning">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a href="/admin/users/{{ user.id }}/edit" class="btn btn-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    {% if current_user.id != user.id and current_user.role.value == 'admin' %}
+                                    <button type="button" class="btn btn-icon" title="Delete" 
+                                            onclick="confirmDelete({{ user.id }}, '{{ user.username }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                <div style="padding: 2rem;">
+                                    <i class="fas fa-users" style="font-size: 2rem; color: var(--admin-text-secondary); margin-bottom: 1rem;"></i>
+                                    <p>No users found.</p>
+                                    <a href="/admin/users/create" class="btn btn-primary mt-3">
+                                        <i class="fas fa-plus"></i> Create User
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if pages > 1 %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination">
+                    {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="/admin/users?page={{ page - 1 }}{% if search %}&search={{ search }}{% endif %}{% if role %}&role={{ role }}{% endif %}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    </li>
+                    {% endif %}
+                    
+                    {% for p in range(1, pages + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="/admin/users?page={{ p }}{% if search %}&search={{ search }}{% endif %}{% if role %}&role={{ role }}{% endif %}">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if page < pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="/admin/users?page={{ page + 1 }}{% if search %}&search={{ search }}{% endif %}{% if role %}&role={{ role }}{% endif %}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="deleteModal" tabindex="-1" style="display: none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the user "<span id="userName"></span>"?</p>
+                <p>This action cannot be undone and may affect content associated with this user.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(userId, userName) {
+    document.getElementById('deleteModal').style.display = 'block';
+    document.getElementById('userName').textContent = userName;
+    document.getElementById('deleteForm').action = `/admin/users/${userId}/delete`;
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+</script>
+{% endblock %}

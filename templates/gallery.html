@@ -1,0 +1,507 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'css/gallery.css' %}" rel="stylesheet">
+<style>
+    /* Ensure images display properly */
+    .gallery-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    /* Video player styles */
+    .video-container {
+        position: relative;
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    #modal-video-player {
+        display: block;
+        width: 100%;
+        max-height: 80vh;
+        margin: 0 auto;
+    }
+    
+    /* Static video banner styles */
+    .video-thumbnail-static {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #222;
+        background-image: url('/static/uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg');  /* Default static banner */
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .video-banner-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .play-icon-container {
+        margin-bottom: 10px;
+    }
+    
+    .play-icon-container i {
+        font-size: 3rem;
+        color: #fff;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+    
+    /* Ensure video wrapper has proper dimensions */
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        overflow: hidden;
+        border-radius: 8px;
+    }
+    
+    .video-wrapper .video-thumbnail {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Gallery Hero Section -->
+<section class="gallery-hero-section">
+    <div class="container">
+        <div class="gallery-hero-content">
+            <h1 class="gallery-hero-title">Our Gallery</h1>
+            <p class="gallery-hero-description">
+                Explore the beauty of woodfire ovens and the exceptional culinary creations they make possible.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Navigation -->
+<section class="gallery-nav-section">
+    <div class="container">
+        <div class="gallery-nav-container">
+            <button class="gallery-nav-item active" data-gallery="all">All</button>
+            {% for category in categories %}
+            <button class="gallery-nav-item" data-gallery="{{ category.name }}">{{ category.name }}</button>
+{% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if show_message %}
+<section class="stay-tuned-message">
+    <div class="container">
+        <h2>Stay tuned for more updates</h2>
+        <p>We are working hard to bring you new and exciting content soon.</p>
+    </div>
+</section>
+{% else %}
+<!-- Image Gallery Section -->
+<section class="image-gallery-section" id="image-gallery">
+    <div class="container">
+        <div class="gallery-grid">
+            {% for item in gallery_items %}
+            <!-- Gallery Item -->
+            {% if item.media_type == 'image' or item.media_type.value == 'image' %}
+            <div class="gallery-item" data-category="{{ item.category.name }}">
+                <div class="gallery-image">
+                     {% if item.file_path %}
+                         {% if item.file_path|slice:":8" != "/static/" %}
+                             {% with img_path="/static/"|add:item.file_path %}
+                                 <img src="{{ img_path }}" alt="{{ item.title }}" class="gallery-img">
+                             {% endwith %}
+                         {% else %}
+                             <img src="{{ item.file_path }}" alt="{{ item.title }}" class="gallery-img">
+{% endif %}
+                     {% else %}
+                         <img src="" alt="{{ item.title }}" class="gallery-img">
+{% endif %}
+                    <div class="gallery-overlay">
+                        <div class="gallery-caption">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.description }}</p>
+                        </div>
+                        {% if item.file_path %}
+                            {% if item.file_path|slice:":8" != "/static/" %}
+                                {% with img_path="/static/"|add:item.file_path %}
+                                    <button class="gallery-zoom" data-img="{{ img_path }}" data-title="{{ item.title }}" data-desc="{{ item.description }}">
+                                        <i class="bi bi-zoom-in"></i>
+                                    </button>
+                                {% endwith %}
+                            {% else %}
+                                <button class="gallery-zoom" data-img="{{ item.file_path }}" data-title="{{ item.title }}" data-desc="{{ item.description }}">
+                                    <i class="bi bi-zoom-in"></i>
+                                </button>
+{% endif %}
+                        {% else %}
+                            <button class="gallery-zoom" data-img="" data-title="{{ item.title }}" data-desc="{{ item.description }}">
+                                <i class="bi bi-zoom-in"></i>
+                            </button>
+{% endif %}
+                    </div>
+                </div>
+            </div>
+{% endif %}
+{% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Video Gallery Section -->
+<section class="video-gallery-section" id="video-gallery">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Video Gallery</h2>
+            <p class="section-subheading">
+                Watch our woodfire ovens in action and discover the possibilities of authentic wood-fired cooking.
+            </p>
+        </div>
+        
+        <div class="video-gallery-grid">
+            {% for item in gallery_items %}
+            {% if item.media_type == 'video' or item.media_type.value == 'video' %}
+            <!-- Video Item -->
+            <div class="video-item" data-category="{{ item.category.name }}">
+                <div class="video-wrapper">
+                    {% if item.thumbnail_path %}
+                        {% if item.thumbnail_path|slice:":8" != "/static/" %}
+                            {% with thumb_path="/static/"|add:item.thumbnail_path %}
+                                <img src="{{ thumb_path }}" alt="{{ item.title }}" class="video-thumbnail">
+                            {% endwith %}
+                        {% else %}
+                            {% with thumb_path=item.thumbnail_path %}
+                                <img src="{{ thumb_path }}" alt="{{ item.title }}" class="video-thumbnail">
+                            {% endwith %}
+{% endif %}
+                    {% else %}
+                        {% with thumb_path="" %}
+                            <img src="{{ thumb_path }}" alt="{{ item.title }}" class="video-thumbnail">
+                        {% endwith %}
+{% endif %}
+                    {% if item.file_path and item.file_path|slice:":8" != "/static/" %}
+                    {% with video_path="/static/"|add:item.file_path %}
+                        <div class="video-overlay">
+                            <button class="video-play-btn" data-video="{{ video_path }}">
+                                <i class="bi bi-play-circle-fill"></i>
+                            </button>
+                            <div class="video-caption">
+                                <h3>{{ item.title }}</h3>
+                                <p>{{ item.description }}</p>
+                            </div>
+                        </div>
+                    {% endwith %}
+                {% else %}
+                    <img src="/static/uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg" alt="{{ item.title }}" class="video-thumbnail">
+                    <div class="video-overlay">
+                        <button class="video-play-btn" data-video="{{ item.file_path }}">
+                            <i class="bi bi-play-circle-fill"></i>
+                        </button>
+                        <div class="video-caption">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.description }}</p>
+                        </div>
+                    </div>
+{% endif %}
+                
+                    {% else %}
+                        <img src="/static/uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg" alt="{{ item.title }}" class="video-thumbnail">
+                        <div class="video-overlay">
+                            <button class="video-play-btn" data-video="{{ item.file_path }}">
+                                <i class="bi bi-play-circle-fill"></i>
+                            </button>
+                            <div class="video-caption">
+                                <h3>{{ item.title }}</h3>
+                                <p>{{ item.description }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+{% endif %}
+           
+        </div>
+    </div>
+</section>
+{% endfor %}
+
+<!-- Gallery CTA Section -->
+<section class="gallery-cta-section">
+    <div class="container">
+        <div class="gallery-cta-content">
+            <h2>Ready to Create Your Own Masterpieces?</h2>
+            <p>Explore our range of premium woodfire ovens and elevate your cooking experience today.</p>
+            <div class="cta-buttons">
+                <a href="/products" class="btn btn-custom-primary">View Our Ovens</a>
+                <a href="/contact" class="btn btn-custom-secondary">Request Information</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Lightbox for Image Gallery -->
+<div class="lightbox" id="gallery-lightbox">
+    <div class="lightbox-container">
+        <img src="" alt="" id="lightbox-image">
+        <div class="lightbox-caption">
+            <h3 id="lightbox-title"></h3>
+            <p id="lightbox-description"></p>
+        </div>
+    </div>
+    <button class="lightbox-close" id="lightbox-close"><i class="bi bi-x-lg"></i></button>
+</div>
+
+<!-- Modal for Video Gallery -->
+<div class="video-modal" id="video-modal">
+    <div class="video-modal-content">
+        <div class="video-container">
+            <iframe id="video-frame" width="560" height="315" src="" title="Video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <!-- HTML5 video player will be inserted here dynamically when needed -->
+        </div>
+    </div>
+    <button class="video-modal-close" id="video-modal-close"><i class="bi bi-x-lg"></i></button>
+</div>
+
+<!-- Gallery JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Gallery Navigation
+    const navButtons = document.querySelectorAll('.gallery-nav-item');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    const videoItems = document.querySelectorAll('.video-item');
+    const imageGallerySection = document.getElementById('image-gallery');
+    const videoGallerySection = document.getElementById('video-gallery');
+
+    // Debug information
+    console.log("Categories found:", [...navButtons].map(btn => btn.getAttribute('data-gallery')));
+    console.log("Gallery items found:", galleryItems.length);
+    console.log("Video items found:", videoItems.length);
+    
+    // Dump all item categories for debugging
+    console.log("All gallery item categories:", [...galleryItems].map(item => ({
+        category: item.getAttribute('data-category'),
+        title: item.querySelector('h3').textContent
+    })));
+
+    // Force lowercase on all category data-attributes for easier comparison
+    galleryItems.forEach(item => {
+        const category = item.getAttribute('data-category');
+        if (category) {
+            item.setAttribute('data-category', category.toLowerCase());
+        }
+    });
+    
+    videoItems.forEach(item => {
+        const category = item.getAttribute('data-category');
+        if (category) {
+            item.setAttribute('data-category', category.toLowerCase());
+        }
+    });
+
+    navButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            const category = this.getAttribute('data-gallery').toLowerCase();
+            console.log("Selected category:", category);
+
+            // Show/hide sections based on selected category
+            if (category === 'videos') {
+                imageGallerySection.style.display = 'none';
+                videoGallerySection.style.display = 'block';
+            } else {
+                imageGallerySection.style.display = 'block';
+                videoGallerySection.style.display = category === 'all' ? 'block' : 'none';
+            }
+
+            // Show/hide gallery items based on category
+            if (category === 'all') {
+                console.log("Showing all items");
+                galleryItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+                videoItems.forEach(item => {
+                    item.style.display = 'block';
+                });
+            } else {
+                console.log(`Filtering for category: "${category}"`);
+                
+                // Process all gallery items
+                galleryItems.forEach(item => {
+                    const itemCategory = (item.getAttribute('data-category') || '').toLowerCase();
+                    console.log(`Item: ${item.querySelector('h3').textContent}, Category: "${itemCategory}"`);
+                    
+                    // More flexible matching - if the category string appears anywhere in the item category
+                    if (itemCategory === category || 
+                        itemCategory.includes(category) || 
+                        category.includes(itemCategory) ||
+                        (itemCategory.length > 0 && category.length > 0)) {
+                        console.log("  → MATCH - Showing item");
+                        item.style.display = 'block';
+                    } else {
+                        console.log("  → NO MATCH - Hiding item");
+                        item.style.display = 'none';
+                    }
+                });
+                
+                // Process all video items
+                videoItems.forEach(item => {
+                    const itemCategory = (item.getAttribute('data-category') || '').toLowerCase();
+                    if (itemCategory === category || 
+                        itemCategory.includes(category) || 
+                        category.includes(itemCategory) ||
+                        (itemCategory.length > 0 && category.length > 0)) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            }
+        });
+    });
+
+    // Image Lightbox
+    const lightbox = document.getElementById('gallery-lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxDescription = document.getElementById('lightbox-description');
+    const lightboxClose = document.getElementById('lightbox-close');
+    const zoomButtons = document.querySelectorAll('.gallery-zoom');
+
+    zoomButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const imgSrc = button.getAttribute('data-img');
+            const imgTitle = button.getAttribute('data-title');
+            const imgDesc = button.getAttribute('data-desc');
+
+            console.log("Opening lightbox with image:", imgSrc);
+            lightboxImage.src = imgSrc;
+            lightboxTitle.textContent = imgTitle;
+            lightboxDescription.textContent = imgDesc;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    lightboxClose.addEventListener('click', () => {
+        lightbox.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    });
+
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+    });
+
+    // Video Modal
+    const videoModal = document.getElementById('video-modal');
+    const videoFrame = document.getElementById('video-frame');
+    const videoModalClose = document.getElementById('video-modal-close');
+    const videoPlayButtons = document.querySelectorAll('.video-play-btn');
+
+    videoPlayButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const videoSrc = button.getAttribute('data-video');
+            console.log("Opening video:", videoSrc);
+            
+            // Check if it's a video format that needs HTML5 video player instead of iframe
+            const videoExt = videoSrc.split('.').pop().toLowerCase();
+            if (videoExt === 'mp4' || videoExt === 'webm' || videoExt === 'ogg') {
+                // Use HTML5 video player
+                videoFrame.style.display = 'none';
+                
+                // Remove existing video element if any
+                const existingVideo = videoModal.querySelector('video');
+                if (existingVideo) {
+                    existingVideo.remove();
+                }
+                
+                // Create new video element
+                const videoElement = document.createElement('video');
+                videoElement.src = videoSrc;
+                videoElement.controls = true;
+                videoElement.autoplay = true;
+                videoElement.style.width = '100%';
+                videoElement.style.maxHeight = '80vh';
+                videoElement.style.outline = 'none';
+                videoElement.id = 'modal-video-player';
+                
+                // Insert video element
+                const videoContainer = videoModal.querySelector('.video-container');
+                videoContainer.appendChild(videoElement);
+            } else {
+                // Use iframe for other video types
+                videoFrame.style.display = 'block';
+                videoFrame.src = videoSrc;
+                
+                // Remove any existing video element
+                const existingVideo = videoModal.querySelector('video');
+                if (existingVideo) {
+                    existingVideo.remove();
+                }
+            }
+            
+            videoModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    videoModalClose.addEventListener('click', () => {
+        videoFrame.src = '';
+        videoModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+        
+        // Stop HTML5 video if playing
+        const videoElement = document.getElementById('modal-video-player');
+        if (videoElement) {
+            videoElement.pause();
+            videoElement.remove();
+        }
+    });
+
+    videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) {
+            videoFrame.src = '';
+            videoModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Stop HTML5 video if playing
+            const videoElement = document.getElementById('modal-video-player');
+            if (videoElement) {
+                videoElement.pause();
+                videoElement.remove();
+            }
+        }
+    });
+});
+</script>
+{% endif %}
+{% endblock %}

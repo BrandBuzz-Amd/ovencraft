@@ -1,0 +1,1821 @@
+{% load static %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    :root {
+        --highlight-color: #cc9955;
+        --text-color: #ffffff;
+        --dark-bg: #000000;
+    }
+    
+    .modern-hero-section {
+        position: relative;
+        min-height: 90vh;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+        background-color: var(--dark-bg);
+    }
+    
+    /* Video Background */
+    .hero-video-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        overflow: hidden;
+        background-color: black;
+    }
+    
+    .hero-video {
+        position: absolute;
+        top: 50%;
+        left: 70%;
+        min-width: 100%;
+        min-height: 100%;
+        width: auto;
+        height: auto;
+        transform: translateX(-50%) translateY(-50%);
+        object-fit: cover;
+        background-color: black;
+    }
+    
+    .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(0, 0, 0, 0.8) 30%, rgba(0, 0, 0, 0.5) 100%);
+        z-index: 2;
+    }
+    
+    /* Hero Content */
+    .hero-container {
+        position: relative;
+        z-index: 3;
+        padding-top: 8rem;
+        padding-bottom: 2rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    
+    .hero-content-wrapper {
+        padding-right: 2rem;
+    }
+    
+    .hero-badge {
+        display: inline-block;
+        background-color: rgba(255, 107, 53, 0.1);
+        color: var(--primary-color);
+        font-size: 0.875rem;
+        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        margin-bottom: 1.5rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+    
+    .hero-title {
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+    }
+    
+    .hero-title .highlight {
+        display: inline-block;
+        background-color: var(--highlight-color);
+        color: var(--text-color);
+        padding: 0 1rem;
+        border-radius: 4px;
+    }
+    
+    .hero-description {
+        font-size: 1.25rem;
+        line-height: 1.5;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 2.5rem;
+        max-width: 100%;
+        padding-left: 0;
+    }
+    
+    /* Call to Action */
+    .hero-cta {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .hero-btn {
+        padding: 1rem 2rem;
+        font-weight: 600;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background-color: var(--primary-color);
+        border: none;
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+        transition: all 0.3s ease;
+        border-radius: 4px;
+        text-decoration: none;
+    }
+    
+    .hero-btn:hover {
+        background-color: var(--highlight-color);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255, 107, 53, 0.5);
+    }
+    
+    .satisfied-clients {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .client-avatars {
+        display: flex;
+        align-items: center;
+    }
+    
+    .client-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 2px solid var(--dark-bg);
+        margin-right: -10px;
+    }
+    
+    .client-text {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .client-count {
+        font-weight: 600;
+        color: var(--text-color);
+        font-size: 0.875rem;
+    }
+    
+    .client-join {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.75rem;
+    }
+    
+    /* Media Queries */
+    @media (max-width: 991px) {
+        .hero-title {
+            font-size: 3rem;
+        }
+        
+        .hero-content-wrapper {
+            padding-right: 0;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .hero-title {
+            font-size: 2.5rem;
+        }
+        
+        .hero-badge {
+            font-size: 0.75rem;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+        }
+        
+        .hero-cta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        
+        /* Black overlay only for mobile devices */
+        .video-overlay {
+            background: rgba(0, 0, 0, 0.75);
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        /* Darker overlay for smallest screens */
+        .video-overlay {
+            background: rgba(0, 0, 0, 0.85);
+        }
+    }
+    </style>
+
+
+<section class="modern-hero-section">
+    <!-- Video Background -->
+    <div class="hero-video-container">
+        <video class="hero-video" autoplay muted loop playsinline>
+            <source src="{% static 'videos/123069-726838210_small.mp4' %}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="video-overlay"></div>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="container hero-container">
+        <div class="row">
+            <div class="col-lg-7 hero-content-wrapper">
+                <div class="hero-badge">PREMIUM WOOD-FIRED OVENS</div>
+                
+                <h1 class="hero-title">
+                    We <span class="highlight">craft</span> your
+                    <br>culinary experience
+                </h1>
+                
+                <p class="hero-description">
+                    Handcrafted premium woodfire ovens that bring centuries-old cooking techniques to your modern home or business.
+                </p>
+                
+                <div class="hero-cta">
+                    <a href="#collection" class="btn btn-primary hero-btn">Explore Collection</a>
+                    
+                    <div class="satisfied-clients">
+                        <div class="client-avatars">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Client" class="client-avatar">
+                            <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Client" class="client-avatar">
+                            <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="Client" class="client-avatar">
+                        </div>
+                        <div class="client-text">
+                            <span class="client-count">+50 satisfied clients</span>
+                            <span class="client-join">Join them now →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-5 hero-image-wrapper">
+                <!-- Optional: Add a floating phone or product image here -->
+            </div>
+        </div>
+    </div>
+    
+    
+</section>
+    
+
+<!-- Hero Section with Video Background -->
+<!-- <section class="hero-section">
+    <video class="hero-video" autoplay muted loop>
+        <source src="https://ovencraft.in/wp-content/uploads/2025/01/AYUSH_01.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+        <h1 class="hero-title">Experience Authentic <br>Wood-Fired Cooking</h1>
+        <p class="hero-description">
+            Handcrafted premium woodfire ovens that bring centuries-old cooking techniques to your modern home or business.
+        </p>
+        <a href="#collection" class="btn btn-custom-primary btn-lg">Explore Our Collection</a>
+    </div>
+</section> -->
+
+<!-- Partners Section -->
+<section class="partners-section">
+    <div class="container">
+        <div class="section-title text-center mb-5">
+            <h2 class="section-heading">Our Trusted Partners</h2>
+            <p class="section-subheading">
+                Working with industry leaders to deliver excellence
+            </p>
+        </div>
+        
+        <div class="partners-grid">
+            <div class="partner-card">
+            <div class="partner-logo-wrapper">
+                <img src="{% static 'images/logos/logo-7810.jpeg' %}" alt="Chelvies Coffee" class="partner-logo">
+            </div>
+            <div class="partner-info">
+                <h3>Chelvies Coffee</h3>
+                <p>Premium Coffee Experience</p>
+            </div>
+        </div>
+        
+        <div class="partner-card">
+            <div class="partner-logo-wrapper">
+                <img src="{% static 'images/logos/raddison.jpeg' %}" alt="Raddison Blu" class="partner-logo">
+            </div>
+            <div class="partner-info">
+                <h3>Raddison Blu</h3>
+                <p>Luxury Hospitality</p>
+            </div>
+        </div>
+        
+        <div class="partner-card">
+            <div class="partner-logo-wrapper">
+                <img src="{% static 'images/logos/fairmont.png' %}" alt="Fairmont" class="partner-logo">
+            </div>
+            <div class="partner-info">
+                <h3>Fairmont</h3>
+                <p>World-Class Hotels</p>
+            </div>
+        </div>
+        
+        <div class="partner-card">
+            <div class="partner-logo-wrapper">
+                <img src="{% static 'images/logos/novotel.png' %}" alt="Novatel" class="partner-logo">
+            </div>
+            <div class="partner-info">
+                <h3>Novotel</h3>
+                <p>Modern Hospitality</p>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.partners-section {
+    padding: 6rem 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.02), rgba(0,0,0,0.05));
+}
+
+.partners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+}
+
+.partner-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.partner-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.partner-logo-wrapper {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+}
+
+.partner-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.partner-card:hover .partner-logo {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
+.partner-info h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.partner-info p {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .partners-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .partner-logo-wrapper {
+        height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .partners-section {
+        padding: 4rem 0;
+    }
+    
+    .partners-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+</style>
+
+<!-- Innovative Products Section -->
+<section id="collection" class="product-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">We Provide Premium Wood & Gas Fire<br> Brick Ovens</h2>
+            <p class="section-subheading">
+                Explore our collection of expertly crafted ovens, designed for exceptional cooking performance and lasting durability.
+            </p>
+        </div>
+        
+        <div class="products-wrapper">
+            <!-- Product 1 -->
+            <div class="product-item">
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <img src="{% static 'images/h_products/Culinary Canvas 29.jpg' %}" class="product-card-img" alt="Product 1">
+                        <div class="product-overlay">
+                            <a href="{% url 'products' %}" class="view-product-btn">View Details</a>
+                        </div>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-category">Compact Performance</div>
+                        <h3 class="product-card-title">Culinary Canvas 29</h3>
+                        
+                        <p class="product-card-text">
+                            A compact, high-performance oven with a 29-inch internal diameter, perfect for home chefs and light commercial use. It fits in small spaces and bakes two 12-inch pizzas at once, with excellent heat retention for temperatures up to 900°C.
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 2 -->
+            <div class="product-item">
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <img src="{% static 'images/h_products/Fusion flare 36.jpg' %}" class="product-card-img" alt="Product 2">
+                        <div class="product-overlay">
+                            <a href="{% url 'products' %}" class="view-product-btn">View Details</a>
+                        </div>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-category">Versatile Excellence</div>
+                        <h3 class="product-card-title">Fusion Flare 36</h3>
+                        
+                        <p class="product-card-text">
+                            Versatile and durable, this model has a 36-inch internal diameter and can cook three 12-inch pizzas simultaneously. Ideal for larger gatherings, it combines robust insulation with customizable aesthetics.
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 3 -->
+            <div class="product-item">
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <img src="{% static 'images/h_products/Signature select 42.jpg' %}" class="product-card-img" alt="Product 3">
+                        <div class="product-overlay">
+                            <a href="{% url 'products' %}" class="view-product-btn">View Details</a>
+                        </div>
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-category">Professional Grade</div>
+                        <h3 class="product-card-title">Signature Select 42</h3>
+                        
+                        <p class="product-card-text">
+                            The flagship model, boasting a 42-inch internal diameter for high-capacity home or commercial use. It can bake up to five 12-inch pizzas at once, making it perfect for pizza enthusiasts and professional setups.
+                        </p>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Product Comparison Section -->
+<section id="product-comparison" class="comparison-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Find Your Perfect Fire Brick Oven</h2>
+            <p class="section-subheading">
+                Compare our models to find the right size and features for your cooking needs and space.
+            </p>
+        </div>
+        
+        <div class="comparison-table-wrapper">
+            <div class="table-responsive">
+                                <table class="comparison-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="feature-header">Features</th>
+                                            <th class="product-header">
+                                                <div class="product-header-img">
+                                                    <img src="{% static 'images/t_products/4.jpg' %}" alt="Classic Woodfire Oven">
+                                                </div>
+                                                <h3>Culinary Canvas 29</h3>
+                                                <span class="product-type">Compact Performance</span>
+                                            </th>
+                                            <th class="product-header">
+                                                <div class="product-header-img">
+                                                    <img src="{% static 'images/t_products/2.jpg' %}" alt="Artisan Woodfire Oven">
+                                                </div>
+                                                <h3>Fusion Flare 36</h3>
+                                                <span class="product-type">Versatile Excellence</span>
+                                            </th>
+                                            <th class="product-header">
+                                                <div class="product-header-img">
+                                                    <img src="{% static 'images/t_products/3.jpg' %}" alt="Portable Woodfire Oven">
+                                                </div>
+                                                <h3>Signature Select 42</h3>
+                                                <span class="product-type">Professional Grade</span>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="feature-name">Pizza Capacity (12")</td>
+                                            <td> 🍕🍕</td>
+                                            <td> 🍕🍕🍕</td>
+                                            <td> 🍕🍕🍕🍕🍕</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Pizza Capacity (9")</td>
+                                            <td> 🍕🍕🍕</td>
+                                            <td> 🍕🍕🍕🍕</td>
+                                            <td> 🍕🍕🍕🍕🍕🍕</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Space Required (Feet)</td>
+                                            <td>5 ft x 5 ft</td>
+                                            <td>5.6 ft x 5.6 ft</td>
+                                            <td>6 ft x 6 ft</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Weight</td>
+                                            <td>750 kg</td>
+                                            <td>900–1,000 kg</td>
+                                            <td>1,500–1,600 kg</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Customization</td>
+                                            <td>Custom tile options</td>
+                                            <td>Custom tile cladding</td>
+                                            <td>Customizable tile options</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="feature-name">Fuel Options</td>
+                                            <td>Wood / Gas / Hybrid / Automatic Hybrid</td>
+                                            <td>Wood / Gas / Hybrid / Automatic Hybrid</td>
+                                            <td>Wood / Gas / Hybrid / Automatic Hybrid</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Call to Action Section -->
+<section id="cta-section" class="cta-section">
+    <div class="container">
+        <div class="row align-items-stretch">
+            <!-- Image Column -->
+            <div class="col-lg-6 cta-image-col">
+                <div class="cta-image-wrapper">
+                    <img src="{% static 'images/h_ft.jpg' %}" alt="Premium Woodfire Oven in Action" class="cta-image">
+                </div>
+            </div>
+            
+            <!-- Content Column -->
+            <div class="col-lg-6 cta-content-col">
+                <div class="cta-content">
+                    <div class="cta-pre-heading">Elevate Your Culinary Experience</div>
+                    <h2 class="cta-heading">Transform Your Cooking Space With Authentic Flavor</h2>
+                    <p class="cta-text">
+                        Our premium fire brick ovens deliver unmatched heat retention and authentic taste that conventional cooking methods simply can't achieve. Experience the difference in every dish, from perfect pizzas to artisan breads and succulent roasts.
+                    </p>
+                    <ul class="cta-features">
+                        <li><i class="bi bi-check-circle-fill"></i> Exceptional heat retention with temperatures reaching up to 900°C</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Versatile cooking capacity from two to five 12-inch pizzas simultaneously</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Available in both wood-fired and gas-powered options for convenience</li>
+                        <li><i class="bi bi-check-circle-fill"></i> Handcrafted durability built to last for decades of cooking excellence</li>
+                    </ul>
+                    <div class="cta-actions">
+                        <a href="{% url 'products' %}" class="btn btn-custom-primary btn-lg">Explore Our Collection</a>
+                        <div class="satisfaction-guarantee">
+                            <i class="bi bi-shield-check"></i>
+                            <span>Expert installation and support available</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Why Choose Us Section -->
+<section id="why-choose-us" class="why-choose-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Why Choose Our Fire Brick Ovens</h2>
+            <p class="section-subheading">
+                Discover the advantages that make our ovens the preferred choice for home chefs and professionals alike.
+            </p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-tools"></i>
+                    </div>
+                    <h3 class="feature-title">Superior Craftsmanship</h3>
+                    <p class="feature-text">
+                        Each oven is meticulously constructed with high-quality materials and time-tested techniques for exceptional performance.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-grid-3x3"></i>
+                    </div>
+                    <h3 class="feature-title">Cooking Versatility</h3>
+                    <p class="feature-text">
+                        From perfect pizzas to artisan breads, slow-roasted meats to delicate desserts—explore endless culinary possibilities.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-thermometer-high"></i>
+                    </div>
+                    <h3 class="feature-title">Exceptional Heat Retention</h3>
+                    <p class="feature-text">
+                        Our specialized insulation and materials maintain optimal cooking temperatures, reducing fuel consumption and ensuring consistent results.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-palette"></i>
+                    </div>
+                    <h3 class="feature-title">Design Flexibility</h3>
+                    <p class="feature-text">
+                        Available in various sizes and finishes to complement any outdoor kitchen or commercial space with both beauty and functionality.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 5 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-lightning"></i>
+                    </div>
+                    <h3 class="feature-title">Dual Fuel Options</h3>
+                    <p class="feature-text">
+                        Choose between traditional wood-fired authenticity or the convenience of gas, with models that can accommodate both.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Feature 6 -->
+            <div class="col-md-4">
+                <div class="feature-box">
+                    <div class="feature-icon">
+                        <i class="bi bi-arrows-angle-expand"></i>
+                    </div>
+                    <h3 class="feature-title">Capacity Range</h3>
+                    <p class="feature-text">
+                        Select the perfect size for your needs, from compact ovens for intimate settings to larger models for commercial volume.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Customers Testimonial Section -->
+<section id="testimonials" class="testimonial-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">What Our Customers Say</h2>
+            <p class="section-subheading">
+                Join our community of passionate cooks who have elevated their culinary experience with our fire brick ovens.
+            </p>
+        </div>
+        
+        <div class="testimonial-carousel">
+            <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Testimonial 1"></button>
+                    <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="1" aria-label="Testimonial 2"></button>
+                    <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="2" aria-label="Testimonial 3"></button>
+                </div>
+                
+                <div class="carousel-inner">
+                    <!-- Testimonial 1 -->
+                    <div class="carousel-item active">
+                        <div class="testimonial-content">
+                            <div class="testimonial-card">
+                                
+                                <p class="testimonial-text">
+                                    We couldn't be happier with our experience with Ovencraft! They crafted a beautiful clay oven for our Middle Eastern restaurant, Sarây by Tanoor, and the results have been nothing short of amazing. The oven delivers incredible performance, helping us achieve authentic flavors that our menu demands.
+
+What truly sets Ovencraft apart is their exceptional after-sales service. They've been proactive, responsive, and supportive throughout, ensuring we get the most out of our investment. Highly recommend them to anyone looking for top-quality craftsmanship and reliable service!
+                                </p>
+                                <div class="testimonial-author">
+                                    <div class="author-image">
+                                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Sarah Johnson">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Tanoor</h4>
+                                        <div class="testimonial-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="carousel-item">
+                        <div class="testimonial-content">
+                            <div class="testimonial-card">
+                                
+                                <p class="testimonial-text">
+                                    We had the pleasure of visiting Ovencraft to see their wood-fired pizza ovens in action, and we were thoroughly impressed. The ovens are beautifully crafted with high-quality materials, showcasing the company's dedication to excellence.
+
+While at their location, we had the opportunity to test a pizza made in one of their ovens, and it was absolutely delicious! The perfect crust, smoky flavor, and even cooking truly highlighted the superior performance of their ovens.
+
+The team at Ovencraft was welcoming, knowledgeable, and passionate about their work. If you're looking for a top-notch wood-fired pizza oven, Ovencraft is definitely worth considering.
+                                </p>
+                                <div class="testimonial-author">
+                                    <div class="author-image">
+                                        <img src="https://randomuser.me/api/portraits/men/54.jpg" alt="David Chen">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Jay Panchal</h4>
+                                        <div class="testimonial-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="carousel-item">
+                        <div class="testimonial-content">
+                            <div class="testimonial-card">
+                                
+                                <p class="testimonial-text">
+                                    Ovencraft has completely transformed my baking experience! The quality and precision of their products are outstanding. From cakes to cookies, everything turns out perfect every time. Highly recommended for all baking enthusiasts!
+                                </p>
+                                <div class="testimonial-author">
+                                    <div class="author-image">
+                                        <img src="https://randomuser.me/api/portraits/women/67.jpg" alt="Michelle Rodriguez">
+                                    </div>
+                                    <div class="author-info">
+                                        <h4 class="author-name">Happy Dobariya</h4>
+                                        <div class="testimonial-rating">
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-fill"></i>
+                                            <i class="bi bi-star-half"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                    <span class="carousel-custom-control">
+                        <i class="bi bi-chevron-left"></i>
+                    </span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                    <span class="carousel-custom-control">
+                        <i class="bi bi-chevron-right"></i>
+                    </span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery" class="gallery-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">See Our Ovens in Action</h2>
+            <p class="section-subheading">
+                Browse images of our handcrafted fire brick ovens and the impressive dishes they help create.
+            </p>
+        </div>
+        
+        <div class="gallery-filter">
+            <button class="filter-btn active" data-filter="all">All</button>
+            {% for category in categories %}
+                <button class="filter-btn" data-filter="{{ category.name }}">{{ category.name|title }}</button>
+            {% endfor %}
+        </div>
+        
+        <div class="gallery-grid">
+            {% for item in gallery_items %}
+            <div class="gallery-item" data-category="{{ item.category.name if item.category else 'uncategorized' }}">
+                <div class="gallery-item-inner">
+                    <img src="{{ item.file_path if item.file_path.startswith('/static/') else '/static/' + item.file_path }}" 
+                         alt="{{ item.alt_text or item.title }}" 
+                         class="gallery-img">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>{{ item.title }}</h3>
+                            <p>{{ item.description or '' }}</p>
+                            <a href="#" class="gallery-zoom" 
+                               data-img="{{ item.file_path if item.file_path.startswith('/static/') else '/static/' + item.file_path }}" 
+                               data-title="{{ item.title }}" 
+                               data-desc="{{ item.description or '' }}">
+                                <i class="bi bi-zoom-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <!-- Lightbox Modal -->
+    <div class="lightbox-modal" id="lightbox">
+        <span class="lightbox-close"><i class="bi bi-x-lg"></i></span>
+        <img class="lightbox-content" id="lightbox-img">
+        <div class="lightbox-caption">
+            <h3 id="lightbox-title"></h3>
+            <p id="lightbox-description"></p>
+        </div>
+        <button class="lightbox-nav lightbox-prev"><i class="bi bi-chevron-left"></i></button>
+        <button class="lightbox-nav lightbox-next"><i class="bi bi-chevron-right"></i></button>
+    </div>
+</section>
+
+<style>
+.gallery-section {
+    padding: 6rem 0;
+    background: #f8f9fa;
+}
+
+.gallery-filter {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    background: white;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.filter-btn:hover, .filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.gallery-item {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    aspect-ratio: 1;
+}
+
+.gallery-item-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-item:hover .gallery-img {
+    transform: scale(1.1);
+}
+
+.gallery-info {
+    text-align: center;
+    color: white;
+    padding: 1rem;
+}
+
+.gallery-info h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.gallery-info p {
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.gallery-zoom {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.gallery-zoom:hover {
+    background: var(--highlight-color);
+    transform: scale(1.1);
+}
+
+/* Lightbox Styles */
+.lightbox-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox-content {
+    max-width: 90%;
+    max-height: 80vh;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.lightbox-caption {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    text-align: center;
+    width: 80%;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: white;
+    font-size: 2rem;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.lightbox-prev {
+    left: 1rem;
+}
+
+.lightbox-next {
+    right: 1rem;
+}
+
+.lightbox-nav:hover {
+    background: var(--primary-color);
+}
+
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .gallery-info h3 {
+        font-size: 1.1rem;
+    }
+    
+    .gallery-info p {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-btn {
+        padding: 0.4rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filter functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            btn.classList.add('active');
+            
+            const filterValue = btn.getAttribute('data-filter');
+            
+            galleryItems.forEach(item => {
+                if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    }, 50);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+    
+    // Lightbox functionality
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxDescription = document.getElementById('lightbox-description');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
+    let currentIndex = 0;
+    let visibleItems = [];
+    
+    // Open lightbox
+    document.querySelectorAll('.gallery-zoom').forEach((item, index) => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Get only visible items
+            visibleItems = Array.from(galleryItems).filter(item => item.style.display !== 'none');
+            
+            // Find current index in visible items
+            const parentItem = this.closest('.gallery-item');
+            currentIndex = visibleItems.indexOf(parentItem);
+            
+            const img = parentItem.querySelector('.gallery-img');
+            const title = parentItem.querySelector('.gallery-info h3').textContent;
+            const description = parentItem.querySelector('.gallery-info p').textContent;
+            
+            lightboxImg.src = img.src;
+            lightboxTitle.textContent = title;
+            lightboxDescription.textContent = description;
+            
+            lightbox.style.display = 'flex';
+            setTimeout(() => {
+                lightbox.style.opacity = '1';
+            }, 10);
+            
+            // Disable scrolling on body
+            document.body.style.overflow = 'hidden';
+        });
+    });
+    
+    // Close lightbox
+    lightboxClose.addEventListener('click', () => {
+        lightbox.style.opacity = '0';
+        setTimeout(() => {
+            lightbox.style.display = 'none';
+        }, 300);
+        
+        // Enable scrolling on body
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Navigate through lightbox
+    lightboxNext.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % visibleItems.length;
+        updateLightbox();
+    });
+    
+    lightboxPrev.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
+        updateLightbox();
+    });
+    
+    function updateLightbox() {
+        const item = visibleItems[currentIndex];
+        const img = item.querySelector('.gallery-img');
+        const title = item.querySelector('.gallery-info h3').textContent;
+        const description = item.querySelector('.gallery-info p').textContent;
+        
+        // Animate transition
+        lightboxImg.style.opacity = '0';
+        lightboxTitle.style.opacity = '0';
+        lightboxDescription.style.opacity = '0';
+        
+        setTimeout(() => {
+            lightboxImg.src = img.src;
+            lightboxTitle.textContent = title;
+            lightboxDescription.textContent = description;
+            
+            lightboxImg.style.opacity = '1';
+            lightboxTitle.style.opacity = '1';
+            lightboxDescription.style.opacity = '1';
+        }, 300);
+    }
+    
+    // Close on clicking outside of image
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            lightboxClose.click();
+        }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (lightbox.style.display === 'flex') {
+            if (e.key === 'Escape') {
+                lightboxClose.click();
+            } else if (e.key === 'ArrowRight') {
+                lightboxNext.click();
+            } else if (e.key === 'ArrowLeft') {
+                lightboxPrev.click();
+            }
+        }
+    });
+});
+</script>
+
+<!-- Advanced Animated CTA Section -->
+<section id="animated-cta" class="animated-cta-section">
+    <!-- Animated Background Elements -->
+    <div class="animated-bg">
+        <div class="floating-particle particle-1"></div>
+        <div class="floating-particle particle-2"></div>
+        <div class="floating-particle particle-3"></div>
+        <div class="floating-particle particle-4"></div>
+        <div class="floating-particle particle-5"></div>
+        <div class="flame-animation"></div>
+    </div>
+    
+    <div class="container">
+        <div class="animated-cta-content">
+            <div class="cta-badge" data-aos="fade-down">
+                <span>Limited Time Offer</span>
+            </div>
+            
+            <h2 class="animated-cta-heading" data-aos="fade-up" data-aos-delay="100">
+                Elevate Your Culinary <span class="highlight-text">Experience</span>
+            </h2>
+            
+            <p class="animated-cta-text" data-aos="fade-up" data-aos-delay="200">
+                Experience the unmatched flavor and versatility of authentic woodfire cooking with our premium ovens. 
+                Get 15% off and free installation when you order this month.
+            </p>
+            
+            <div class="cta-action-wrapper" data-aos="fade-up" data-aos-delay="300">
+                <a href="{% url 'products' %}" class="btn-animated">
+                    <span class="btn-text">Shop Now</span>
+                    <span class="btn-icon"><i class="bi bi-arrow-right"></i></span>
+                    <span class="btn-shine"></span>
+                </a>
+                
+                <div class="countdown-timer">
+                    <div class="countdown-label">Offer ends in:</div>
+                    <div class="countdown-digits">
+                        <div class="countdown-unit">
+                            <span class="digit" id="days">14</span>
+                            <span class="unit-label">days</span>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit">
+                            <span class="digit" id="hours">23</span>
+                            <span class="unit-label">hours</span>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit">
+                            <span class="digit" id="minutes">59</span>
+                            <span class="unit-label">min</span>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-unit">
+                            <span class="digit" id="seconds">59</span>
+                            <span class="unit-label">sec</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- FAQ Section -->
+<section id="faq" class="faq-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Frequently Asked Questions</h2>
+            <p class="section-subheading">
+                Find answers to common questions about our fire brick ovens, installation, and cooking techniques.
+            </p>
+        </div>
+        
+        <div class="faq-container">
+            <div class="faq-categories">
+                <button class="faq-category-btn active" data-category="all">All Questions</button>
+                <button class="faq-category-btn" data-category="product">Product Information</button>
+                <button class="faq-category-btn" data-category="installation">Installation & Setup</button>
+                <button class="faq-category-btn" data-category="usage">Usage & Cooking</button>
+                <button class="faq-category-btn" data-category="maintenance">Maintenance & Care</button>
+            </div>
+            
+            <div class="faq-items">
+                <!-- Product Information FAQs -->
+                <div class="faq-item" data-category="product">
+                    <div class="faq-question">
+                        <h3>What makes your woodfire ovens different from others?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our woodfire ovens are crafted with premium refractory materials that offer superior heat retention and distribution. Each oven is handcrafted by skilled artisans with decades of experience, resulting in exceptional quality and durability. We also offer customizable features and finishes to match your specific needs and aesthetic preferences.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="product">
+                    <div class="faq-question">
+                        <h3>What are the different models available?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>We offer three main models:</p>
+                        <ul>
+                            <li><strong>Classic Woodfire:</strong> Traditional design with modern features, ideal for home use.</li>
+                            <li><strong>Artisan Pro:</strong> Premium model with larger cooking surface and enhanced heat retention, perfect for serious home chefs and small restaurants.</li>
+                            <li><strong>Portable Flame:</strong> Compact design for versatility and mobility, great for patios, tailgating, and outdoor events.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="product">
+                    <div class="faq-question">
+                        <h3>What materials are your ovens made from?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Our ovens are constructed using a combination of high-quality materials:</p>
+                        <ul>
+                            <li>Premium refractory bricks for the cooking floor</li>
+                            <li>High-alumina refractory cement for superior heat resistance</li>
+                            <li>Multiple layers of ceramic fiber insulation</li>
+                            <li>Stainless steel or powder-coated steel exteriors</li>
+                            <li>Custom finishes including brick, stone, or tile exteriors (available on select models)</li>
+                        </ul>
+                        <p>These materials are carefully selected to maximize heat retention, cooking performance, and durability in outdoor environments.</p>
+                    </div>
+                </div>
+                
+                <!-- Installation & Setup FAQs -->
+                <div class="faq-item" data-category="installation">
+                    <div class="faq-question">
+                        <h3>Do I need a professional to install my oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For our Classic Woodfire and Artisan Pro models, professional installation is recommended due to their weight and the need for a proper foundation. These models typically require concrete slabs and may need to comply with local building codes.</p>
+                        <p>Our Portable Flame model requires no installation and can be placed on any stable, heat-resistant surface. It comes fully assembled and ready to use right out of the box.</p>
+                        <p>We offer installation services in select regions, and can recommend certified installers for customers outside our service areas.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="installation">
+                    <div class="faq-question">
+                        <h3>What kind of foundation do I need for my oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For permanent installations, we recommend a reinforced concrete slab that extends at least 6 inches beyond the footprint of the oven in all directions. The slab should be at least 4-6 inches thick and properly cured before installation.</p>
+                        <p>Alternatively, our ovens can be installed on existing stone or concrete patios if they meet weight capacity requirements. For specific foundation recommendations based on your model and location, please consult with our installation team.</p>
+                    </div>
+                </div>
+                
+                <!-- Usage & Cooking FAQs -->
+                <div class="faq-item" data-category="usage">
+                    <div class="faq-question">
+                        <h3>What can I cook in a woodfire oven besides pizza?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>While our ovens excel at making perfect pizzas, they're incredibly versatile cooking tools. Here are just a few things you can cook:</p>
+                        <ul>
+                            <li>Artisan breads and flatbreads</li>
+                            <li>Roasted meats and vegetables</li>
+                            <li>Baked fish and seafood</li>
+                            <li>Casseroles and gratins</li>
+                            <li>Desserts like pies, tarts, and cookies</li>
+                            <li>Slow-cooked stews and braises</li>
+                        </ul>
+                        <p>The high heat and unique cooking environment create flavors and textures that simply can't be achieved in conventional ovens.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="usage">
+                    <div class="faq-question">
+                        <h3>How long does it take to heat up a woodfire oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Heating times vary by model:</p>
+                        <ul>
+                            <li><strong>Classic Woodfire:</strong> Approximately 45 minutes to reach optimal cooking temperature (750-850°F).</li>
+                            <li><strong>Artisan Pro:</strong> About 30 minutes due to enhanced insulation and design.</li>
+                            <li><strong>Portable Flame:</strong> Just 20 minutes to reach cooking temperature, thanks to its smaller size and efficient design.</li>
+                        </ul>
+                        <p>These times can vary slightly based on ambient temperature, fuel quality, and other conditions.</p>
+                    </div>
+                </div>
+                
+                <!-- Maintenance & Care FAQs -->
+                <div class="faq-item" data-category="maintenance">
+                    <div class="faq-question">
+                        <h3>How do I clean and maintain my woodfire oven?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Regular maintenance is simple:</p>
+                        <ol>
+                            <li>After each use, allow the oven to cool completely.</li>
+                            <li>Remove ash and debris using a brass brush and metal scoop (avoid steel brushes as they can damage the cooking surface).</li>
+                            <li>For tough spots, use a damp cloth once the oven is cool.</li>
+                            <li>Periodically check the exterior and chimney for any signs of wear or damage.</li>
+                        </ol>
+                        <p>We recommend a deep clean every 3-6 months depending on usage. Our maintenance kit includes all the tools needed for proper care of your oven.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item" data-category="maintenance">
+                    <div class="faq-question">
+                        <h3>Do I need to cover my oven when not in use?</h3>
+                        <span class="faq-icon"><i class="bi bi-plus"></i></span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes, we strongly recommend using a weather-resistant cover when the oven is not in use. While our ovens are built to withstand outdoor conditions, a cover provides additional protection against severe weather, UV exposure, and debris.</p>
+                        <p>Each of our models has a custom-fitted cover available as an accessory. These covers are made from durable, waterproof materials designed to extend the life and maintain the appearance of your oven.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-more">
+                <p>Still have questions? We're here to help!</p>
+                <a href="{% url 'contact' %}" class="btn btn-custom-secondary">Contact Us</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- Blog Section -->
+<section class="blog-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">Latest From Our Blog</h2>
+            <p class="section-subheading">
+                Explore tips, recipes, and insights from our woodfire cooking experts.
+            </p>
+        </div>
+        
+        <div class="blog-grid">
+            {% for post in recent_posts %}
+            <div class="blog-card">
+                <div class="blog-image">
+                    <img src="{{ post.featured_image or 'https://via.placeholder.com/800x500' }}" alt="{{ post.title }}">
+                    {% if post.categories %}
+                    <div class="blog-category">
+                        <span>{{ post.categories[0].name if post.categories else 'Blog' }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="blog-content">
+                    <div class="blog-meta">
+                        <span class="blog-date"><i class="bi bi-calendar3"></i>  {{ post.created_at|date:"F d, Y" }}</span>
+                        <span class="blog-author"><i class="bi bi-person"></i> {{ post.author.username }}</span>
+                    </div>
+                    <h3 class="blog-title">{{ post.title }}</h3>
+                    <p class="blog-excerpt">
+                        {{ post.excerpt or (post.content|striptags|truncate(150)) }}
+                    </p>
+                    <a href="/blog/{{ post.slug }}" class="blog-link">Read More <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="blog-footer">
+            <a href="{% url 'blogs' %}" class="btn btn-custom-secondary">View All Posts</a>
+        </div>
+    </div>
+</section>
+
+
+
+
+<!-- jQuery and Custom JavaScript for Gallery Functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Filter functionality
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+    
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active class from all buttons
+            filterBtns.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            btn.classList.add('active');
+            
+            const filterValue = btn.getAttribute('data-filter');
+            
+            galleryItems.forEach(item => {
+                if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                    item.style.display = 'block';
+                    setTimeout(() => {
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    }, 50);
+                } else {
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        item.style.display = 'none';
+                    }, 300);
+                }
+            });
+        });
+    });
+    
+    // Lightbox functionality
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxTitle = document.getElementById('lightbox-title');
+    const lightboxDescription = document.getElementById('lightbox-description');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxPrev = document.querySelector('.lightbox-prev');
+    const lightboxNext = document.querySelector('.lightbox-next');
+    let currentIndex = 0;
+    let visibleItems = [];
+    
+    // Open lightbox
+    document.querySelectorAll('.gallery-zoom').forEach((item, index) => {
+        item.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Get only visible items
+            visibleItems = Array.from(galleryItems).filter(item => item.style.display !== 'none');
+            
+            // Find current index in visible items
+            const parentItem = this.closest('.gallery-item');
+            currentIndex = visibleItems.indexOf(parentItem);
+            
+            const img = parentItem.querySelector('.gallery-img');
+            const title = parentItem.querySelector('.gallery-info h3').textContent;
+            const description = parentItem.querySelector('.gallery-info p').textContent;
+            
+            lightboxImg.src = img.src;
+            lightboxTitle.textContent = title;
+            lightboxDescription.textContent = description;
+            
+            lightbox.style.display = 'flex';
+            setTimeout(() => {
+                lightbox.style.opacity = '1';
+            }, 10);
+            
+            // Disable scrolling on body
+            document.body.style.overflow = 'hidden';
+        });
+    });
+    
+    // Close lightbox
+    lightboxClose.addEventListener('click', () => {
+        lightbox.style.opacity = '0';
+        setTimeout(() => {
+            lightbox.style.display = 'none';
+        }, 300);
+        
+        // Enable scrolling on body
+        document.body.style.overflow = 'auto';
+    });
+    
+    // Navigate through lightbox
+    lightboxNext.addEventListener('click', () => {
+        currentIndex = (currentIndex + 1) % visibleItems.length;
+        updateLightbox();
+    });
+    
+    lightboxPrev.addEventListener('click', () => {
+        currentIndex = (currentIndex - 1 + visibleItems.length) % visibleItems.length;
+        updateLightbox();
+    });
+    
+    function updateLightbox() {
+        const item = visibleItems[currentIndex];
+        const img = item.querySelector('.gallery-img');
+        const title = item.querySelector('.gallery-info h3').textContent;
+        const description = item.querySelector('.gallery-info p').textContent;
+        
+        // Animate transition
+        lightboxImg.style.opacity = '0';
+        lightboxTitle.style.opacity = '0';
+        lightboxDescription.style.opacity = '0';
+        
+        setTimeout(() => {
+            lightboxImg.src = img.src;
+            lightboxTitle.textContent = title;
+            lightboxDescription.textContent = description;
+            
+            lightboxImg.style.opacity = '1';
+            lightboxTitle.style.opacity = '1';
+            lightboxDescription.style.opacity = '1';
+        }, 300);
+    }
+    
+    // Close on clicking outside of image
+    lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+            lightboxClose.click();
+        }
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (lightbox.style.display === 'flex') {
+            if (e.key === 'Escape') {
+                lightboxClose.click();
+            } else if (e.key === 'ArrowRight') {
+                lightboxNext.click();
+            } else if (e.key === 'ArrowLeft') {
+                lightboxPrev.click();
+            }
+        }
+    });
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize AOS animations if available
+        if (typeof AOS !== 'undefined') {
+            AOS.init({
+                duration: 1000,
+                once: true,
+                offset: 100
+            });
+        }
+        
+        // Countdown Timer functionality
+        function updateCountdown() {
+            // Set the date we're counting down to (15 days from now)
+            const countDownDate = new Date();
+            countDownDate.setDate(countDownDate.getDate() + 15);
+            
+            // Update the countdown every 1 second
+            const x = setInterval(function() {
+                // Get current date and time
+                const now = new Date().getTime();
+                
+                // Find the time remaining between now and the countdown date
+                const distance = countDownDate - now;
+                
+                // Time calculations for days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                // Display the results
+                document.getElementById("days").textContent = days < 10 ? '0' + days : days;
+                document.getElementById("hours").textContent = hours < 10 ? '0' + hours : hours;
+                document.getElementById("minutes").textContent = minutes < 10 ? '0' + minutes : minutes;
+                document.getElementById("seconds").textContent = seconds < 10 ? '0' + seconds : seconds;
+                
+                // If the count down is finished, clear interval and display message
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.querySelector(".countdown-timer").innerHTML = "Offer has expired!";
+                }
+            }, 1000);
+        }
+        
+        // Initialize countdown
+        updateCountdown();
+    });
+    </script>
+    
+    <!-- Add AOS Library (Animation On Scroll) if not already included in your base template -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- FAQ JavaScript for Accordion and Filtering -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // FAQ Accordion functionality
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                const isActive = faqItem.classList.contains('active');
+                
+                // Close all open items
+                document.querySelectorAll('.faq-item.active').forEach(item => {
+                    item.classList.remove('active');
+                    const icon = item.querySelector('.faq-icon i');
+                    icon.classList.remove('bi-dash');
+                    icon.classList.add('bi-plus');
+                });
+                
+                // Open the clicked item if it wasn't already open
+                if (!isActive) {
+                    faqItem.classList.add('active');
+                    const icon = question.querySelector('.faq-icon i');
+                    icon.classList.remove('bi-plus');
+                    icon.classList.add('bi-dash');
+                }
+            });
+        });
+        
+        // FAQ Category Filtering
+        const categoryBtns = document.querySelectorAll('.faq-category-btn');
+        const faqItems = document.querySelectorAll('.faq-item');
+        
+        categoryBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button
+                categoryBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                const category = btn.getAttribute('data-category');
+                
+                // Filter items
+                faqItems.forEach(item => {
+                    if (category === 'all' || item.getAttribute('data-category') === category) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ensure video is properly sized
+            function adjustVideoSize() {
+                const video = document.querySelector('.hero-video');
+                if (!video) return;
+                
+                const container = document.querySelector('.hero-video-container');
+                const containerRatio = container.clientWidth / container.clientHeight;
+                const videoRatio = video.videoWidth / video.videoHeight;
+                
+                if (containerRatio > videoRatio) {
+                    video.style.width = '100%';
+                    video.style.height = 'auto';
+                } else {
+                    video.style.width = 'auto';
+                    video.style.height = '100%';
+                }
+            }
+            
+            // Call on load and resize
+            window.addEventListener('resize', adjustVideoSize);
+            window.addEventListener('load', adjustVideoSize);
+            
+            // Optional: Add subtle animation to the logos
+            const logos = document.querySelectorAll('.partner-logo');
+            logos.forEach((logo, index) => {
+                logo.style.animationDelay = `${index * 0.2}s`;
+            });
+        });
+        </script>
+
+{% endblock %}

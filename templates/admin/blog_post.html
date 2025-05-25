@@ -1,0 +1,253 @@
+{% extends "base.html" %}
+
+{% block title %}{{ blog.title }} | Blog{% endblock %}
+
+{% block meta %}
+{% if blog.meta_title %}
+<meta name="title" content="{{ blog.meta_title }}">
+{% else %}
+<meta name="title" content="{{ blog.title }}">
+{% endif %}
+
+{% if blog.meta_description %}
+<meta name="description" content="{{ blog.meta_description }}">
+{% elif blog.excerpt %}
+<meta name="description" content="{{ blog.excerpt }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="blog-post-container">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <!-- Post Header -->
+                <div class="blog-header mb-4">
+                    <h1 class="blog-title">{{ blog.title }}</h1>
+                    
+                    <div class="blog-meta mb-3">
+                        <span class="blog-date">{{ blog.published_at.strftime('%B %d, %Y') if blog.published_at else blog.created_at.strftime('%B %d, %Y') }}</span>
+                        
+                        {% if blog.author %}
+                        <span class="blog-author">
+                            by <span class="author-name">{{ blog.author.full_name or blog.author.username }}</span>
+                        </span>
+                        {% endif %}
+                        
+                        {% if blog.categories %}
+                        <div class="blog-categories mt-2">
+                            {% for category in blog.categories %}
+                            <a href="/blogs?category={{ category.slug }}" class="badge bg-secondary text-decoration-none">{{ category.name }}</a>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Featured Image -->
+                {% if blog.featured_image %}
+                <div class="blog-featured-image mb-4">
+                    <img src="{{ blog.featured_image }}" alt="{{ blog.title }}" class="img-fluid rounded">
+                </div>
+                {% endif %}
+                
+                <!-- Blog Content -->
+                <div class="blog-content">
+                    {% if blog.excerpt %}
+                    <div class="blog-excerpt lead mb-4">
+                        {{ blog.excerpt }}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="blog-body">
+                        {{ blog.content | safe }}
+                    </div>
+                </div>
+                
+                <!-- Author Bio if available -->
+                {% if blog.author and blog.author.bio %}
+                <div class="author-bio mt-5 p-4 bg-light rounded">
+                    <div class="row">
+                        {% if blog.author.profile_image %}
+                        <div class="col-auto">
+                            <img src="{{ blog.author.profile_image }}" alt="{{ blog.author.full_name or blog.author.username }}" class="rounded-circle" width="80" height="80">
+                        </div>
+                        {% endif %}
+                        <div class="col">
+                            <h5>About {{ blog.author.full_name or blog.author.username }}</h5>
+                            <p>{{ blog.author.bio }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Comments Section -->
+                {% if blog.comments %}
+                <div class="comments-section mt-5">
+                    <h3>Comments ({{ blog.comments|length }})</h3>
+                    
+                    {% for comment in blog.comments %}
+                    {% if comment.is_approved %}
+                    <div class="comment mb-4 p-3 border rounded">
+                        <div class="comment-header d-flex justify-content-between">
+                            <div class="comment-author">
+                                <strong>{{ comment.user.full_name or comment.user.username }}</strong>
+                            </div>
+                            <div class="comment-date text-muted">
+                                {{ comment.created_at.strftime('%B %d, %Y at %H:%M') }}
+                            </div>
+                        </div>
+                        <div class="comment-content mt-2">
+                            {{ comment.content }}
+                        </div>
+                        
+                        <!-- Nested replies -->
+                        {% if comment.replies %}
+                        <div class="comment-replies mt-3 ms-4">
+                            {% for reply in comment.replies %}
+                            {% if reply.is_approved %}
+                            <div class="reply mb-2 p-3 border rounded bg-light">
+                                <div class="reply-header d-flex justify-content-between">
+                                    <div class="reply-author">
+                                        <strong>{{ reply.user.full_name or reply.user.username }}</strong>
+                                    </div>
+                                    <div class="reply-date text-muted small">
+                                        {{ reply.created_at.strftime('%B %d, %Y at %H:%M') }}
+                                    </div>
+                                </div>
+                                <div class="reply-content mt-2">
+                                    {{ reply.content }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Comment Form -->
+                {% if current_user %}
+                <div class="comment-form-section mt-5">
+                    <h4>Leave a Comment</h4>
+                    <form action="/api/blog/comments" method="post">
+                        <input type="hidden" name="blog_id" value="{{ blog.id }}">
+                        <div class="mb-3">
+                            <label for="comment" class="form-label">Comment</label>
+                            <textarea class="form-control" id="comment" name="content" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Comment</button>
+                    </form>
+                </div>
+                {% else %}
+                <div class="mt-5">
+                    <p>Please <a href="/login">login</a> to leave a comment.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .blog-post-container {
+        max-width: 100%;
+        margin: 0 auto;
+    }
+    
+    .blog-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .blog-meta {
+        color: #6c757d;
+        font-size: 0.95rem;
+    }
+    
+    .blog-meta > span {
+        margin-right: 1rem;
+    }
+    
+    .blog-featured-image img {
+        width: 100%;
+        height: auto;
+        max-height: 500px;
+        object-fit: cover;
+    }
+    
+    .blog-excerpt {
+        font-size: 1.2rem;
+        font-weight: 300;
+        color: #495057;
+        border-left: 4px solid #6c757d;
+        padding-left: 1rem;
+    }
+    
+    .blog-body {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+    
+    .blog-body h2, 
+    .blog-body h3, 
+    .blog-body h4 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .blog-body p {
+        margin-bottom: 1.5rem;
+    }
+    
+    .blog-body img {
+        max-width: 100%;
+        height: auto;
+        margin: 1.5rem 0;
+        border-radius: 0.25rem;
+    }
+    
+    .blog-body ul, 
+    .blog-body ol {
+        margin-bottom: 1.5rem;
+        padding-left: 2rem;
+    }
+    
+    .blog-body blockquote {
+        border-left: 4px solid #6c757d;
+        padding-left: 1rem;
+        margin-left: 0;
+        color: #6c757d;
+        font-style: italic;
+    }
+    
+    .blog-body pre, 
+    .blog-body code {
+        background-color: #f8f9fa;
+        border-radius: 0.25rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .blog-body pre {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        overflow-x: auto;
+    }
+    
+    .author-bio {
+        background-color: #f8f9fa;
+        border-left: 4px solid #6c757d;
+    }
+    
+    .comments-section {
+        border-top: 1px solid #dee2e6;
+        padding-top: 2rem;
+    }
+</style>
+{% endblock %}

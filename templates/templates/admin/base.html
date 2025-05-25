@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Admin Dashboard</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Bootstrap Icons (for templates using Bootstrap icons) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link href="{% static '/css/admin.css' %}" rel="stylesheet">
+    <!-- Additional CSS -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <a href="{% url 'admin' %}" class="admin-logo">
+                    <h1 class="admin-logo-text">Admin Panel</h1>
+                </a>
+                <button class="admin-sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <div class="admin-sidebar-content">
+                <div class="admin-sidebar-user">
+                    <div class="admin-user-avatar">
+                        <img src="https://ui-avatars.com/api/?name={{ current_user.username }}&background=cc9955&color=fff" alt="{{ current_user.username }}">
+                    </div>
+                    <div class="admin-user-info">
+                        <h5 class="admin-user-name">{{ current_user.username }}</h5>
+                        <span class="admin-user-role">{{ current_user.role.value|title if current_user.role else 'User' }}</span>
+                    </div>
+                </div>
+                
+                <div class="admin-sidebar-nav">
+                    <ul class="admin-nav-list">
+                        <li class="admin-nav-item">
+                            <a href="{% url 'admin' %}" class="admin-nav-link {% if request.url.path == '/admin' %}active{% endif %}">
+                                <i class="fas fa-home"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="{% url 'admin_users' %}" class="admin-nav-link {% if request.url.path.startswith('/admin/users') %}active{% endif %}">
+                                <i class="fas fa-users"></i>
+                                Users
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="{% url 'admin_blogs' %}" class="admin-nav-link {% if request.url.path.startswith('/admin/blogs') %}active{% endif %}">
+                                <i class="fas fa-blog"></i>
+                                Blog Posts
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="{% url 'admin_categories' %}" class="admin-nav-link {% if request.url.path.startswith('/admin/categories') %}active{% endif %}">
+                                <i class="fas fa-tags"></i>
+                                Categories
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="{% url 'admin_comments' %}" class="admin-nav-link {% if request.url.path.startswith('/admin/comments') %}active{% endif %}">
+                                <i class="fas fa-comments"></i>
+                                Comments
+                            </a>
+                        </li>
+                        
+                        <div class="admin-nav-separator"></div>
+                        
+                        <li class="admin-nav-item">
+                            <a href="{% url 'admin_gallery' %}" class="admin-nav-link {% if request.url.path.startswith('/admin/gallery') and not request.url.path.startswith('/admin/gallery/categories') %}active{% endif %}">
+                                <i class="fas fa-images"></i>
+                                Gallery
+                            </a>
+                        </li>
+                        <li class="admin-nav-item">
+                            <a href="{% url 'admin_gallery_categories' %}" class="admin-nav-link {% if request.url.path.startswith('/admin/gallery/categories') %}active{% endif %}">
+                                <i class="fas fa-folder"></i>
+                                Gallery Categories
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="admin-header-title">
+                    <h4>{{ title }}</h4>
+                </div>
+                <div class="admin-header-actions">
+                    <a href="/" class="admin-nav-link" title="View Site" target="_blank">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>View Site</span>
+                    </a>
+                    <a href="{% url 'logout' %}" class="admin-nav-link" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Content -->
+            <div class="admin-content">
+                {% block content %}{% endblock %}
+            </div>
+            
+            <!-- Footer -->
+            <div class="admin-footer">
+                <div>© 2025 Your Company</div>
+                <div>Admin Panel v1.0</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% if messages %}
+    <div class="fixed bottom-4 right-4 space-y-4">
+        {% for message in messages %}
+        <div class="alert alert-success">
+            <span class="block sm:inline">{{ message }}</span>
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Scripts -->
+    <script>
+        // Sidebar Toggle for Mobile
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.admin-sidebar').classList.toggle('show');
+        });
+        
+        // Close alerts
+        document.querySelectorAll('.btn-close').forEach(function(button) {
+            button.addEventListener('click', function() {
+                this.closest('.alert').remove();
+            });
+        });
+    </script>
+    
+    <!-- jQuery (for plugins that require it) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Additional JS -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

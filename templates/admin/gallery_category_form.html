@@ -1,0 +1,92 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'Edit' if category else 'Create' }} Gallery Category - Admin Panel{% endblock %}
+
+{% block header_title %}{{ 'Edit' if category else 'New' }} Gallery Category{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h5 class="admin-card-title">
+                <i class="fas fa-{% if category %}edit{% else %}plus{% endif %}"></i>
+                {% if category %}Edit Gallery Category{% else %}New Gallery Category{% endif %}
+            </h5>
+            <a href="/admin/gallery/categories" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Categories
+            </a>
+        </div>
+        
+        <div class="admin-card-body">
+            {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+            {% endif %}
+            
+            <form method="POST" action="{{ '/admin/gallery/categories/' + category.id|string + '/edit' if category else '/admin/gallery/categories/create' }}" class="needs-validation" novalidate>
+                <div class="row">
+                    <!-- Name -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="name" class="form-label">Name <span style="color: var(--admin-danger)">*</span></label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   value="{{ category.name if category else '' }}" required>
+                            <div class="invalid-feedback">
+                                Please provide a category name.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" 
+                                      rows="4">{{ category.description if category else '' }}</textarea>
+                            <small style="color: var(--admin-text-secondary);">
+                                A brief description of this category (optional).
+                            </small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-card-footer">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> 
+                        {% if category %}Update Category{% else %}Create Category{% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Form validation
+(function () {
+    'use strict'
+    
+    var forms = document.querySelectorAll('.needs-validation')
+    
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            
+            form.classList.add('was-validated')
+        }, false)
+    })
+})()
+</script>
+{% endblock %}

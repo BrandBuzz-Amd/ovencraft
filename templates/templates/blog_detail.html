@@ -1,0 +1,499 @@
+{% load static %}
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link href="{% static '/css/blog-detail.css' %}" rel="stylesheet">
+<style>
+    /* Ensure all images are responsive and contained */
+    .blog-post-content img {
+        max-width: 100% !important;
+        height: auto !important;
+        display: block;
+        margin: 0 auto;
+    }
+    
+    /* Featured image container */
+    .featured-image-container {
+        width: 100%;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+    
+    /* Post content container */
+    .post-text-content {
+        width: 100%;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+    
+    /* Blog body - contains the main content */
+    .blog-body {
+        width: 100%;
+        overflow: hidden;
+    }
+    
+    /* Fix for tables and other wide elements */
+    .blog-body table {
+        max-width: 100%;
+        display: block;
+        overflow-x: auto;
+    }
+    
+    /* Fix for iframes, embeds */
+    .blog-body iframe,
+    .blog-body embed,
+    .blog-body object {
+        max-width: 100%;
+    }
+    
+    /* Fix for pre tags (code blocks) */
+    .blog-body pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+</style>
+{% endblock %}
+
+{% block title %}{{ blog.title }} | Blog{% endblock %}
+
+{% block meta %}
+{% if blog.meta_title %}
+<meta name="title" content="{{ blog.meta_title }}">
+{% else %}
+<meta name="title" content="{{ blog.title }}">
+{% endif %}
+
+{% if blog.meta_description %}
+<meta name="description" content="{{ blog.meta_description }}">
+{% elif blog.excerpt %}
+<meta name="description" content="{{ blog.excerpt }}">
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<!-- Blog Post Hero Section -->
+<section class="blog-post-hero-section">
+    <div class="container">
+        <div class="blog-post-hero-content">
+            {% if blog.categories %}
+            <div class="blog-post-category">
+                {% for category in blog.categories %}
+                <a href="/blog/category/{{ category.slug }}">{{ category.name }}</a>
+                {% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+            <h1 class="blog-post-title">{{ blog.title }}</h1>
+            <div class="blog-post-meta">
+                {% if blog.author %}
+                <div class="post-author">
+                    {% if blog.author.profile_image %}
+                    <img src="{{ blog.author.profile_image }}" alt="{{ blog.author.full_name or blog.author.username }}">
+                    {% endif %}
+                    <span>By <a href="/blog/author/{{ blog.author.username }}">{{ blog.author.full_name or blog.author.username }}</a></span>
+                </div>
+                {% endif %}
+                <div class="post-date">
+                    <i class="bi bi-calendar3"></i>
+                    <span>{{ blog.published_at.strftime('%B %d, %Y') if blog.published_at else blog.created_at.strftime('%B %d, %Y') }}</span>
+                </div>
+                {% if blog.content %}
+                <div class="post-reading-time">
+                    <i class="bi bi-clock"></i>
+                    <span>{{ (blog.content|length / 1000)|round|int }} min read</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Post Content Section -->
+<section class="blog-post-content-section">
+    <div class="container">
+        <div class="row">
+            <!-- Main Content Column -->
+            <div class="col-lg-8">
+                <article class="blog-post-content">
+                    <!-- Featured Image Inside Article -->
+                    {% if blog.featured_image %}
+                    <div class="featured-image-container">
+                        <img src="{{ blog.featured_image }}" alt="{{ blog.title }}">
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Social Share Sidebar -->
+                    <div class="social-share-sidebar">
+                        <div class="share-title">Share</div>
+                        <div class="share-links">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" target="_blank" class="share-link facebook">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ blog.title }}" target="_blank" class="share-link twitter">
+                                <i class="bi bi-twitter-x"></i>
+                            </a>
+                            <a href="https://pinterest.com/pin/create/button/?url={{ request.url }}&media={{ blog.featured_image }}&description={{ blog.title }}" target="_blank" class="share-link pinterest">
+                                <i class="bi bi-pinterest"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url }}" target="_blank" class="share-link linkedin">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                            <a href="mailto:?subject={{ blog.title }}&body={{ request.url }}" class="share-link email">
+                                <i class="bi bi-envelope"></i>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Blog Post Text Content -->
+                    <div class="post-text-content">
+                        {% if blog.excerpt %}
+                        <p class="post-intro">{{ blog.excerpt }}</p>
+                        {% endif %}
+                        
+                        <div class="blog-body">
+                            {{ blog.content|safe }}
+                        </div>
+                    </div>
+                    
+                    <!-- Author Box -->
+                    {% if blog.author %}
+                    <div class="author-box">
+                        <div class="author-image">
+                            {% if blog.author.profile_image %}
+                            <img src="{{ blog.author.profile_image }}" alt="{{ blog.author.full_name or blog.author.username }}">
+                            {% endif %}
+                        </div>
+                        <div class="author-info">
+                            <h3>About {{ blog.author.full_name or blog.author.username }}</h3>
+                            <p>{{ blog.author.bio or 'Author at our blog.' }}</p>
+                            <div class="author-social">
+                                <a href="#" class="social-link"><i class="bi bi-facebook"></i></a>
+                                <a href="#" class="social-link"><i class="bi bi-twitter-x"></i></a>
+                                <a href="#" class="social-link"><i class="bi bi-instagram"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Post Tags -->
+                    {% if blog.tags %}
+                    <div class="post-tags">
+                        <span class="tags-title">Tags:</span>
+                        <div class="tags-list">
+                            {% for tag in blog.tags.split(',') %}
+                            <a href="/blog/tag/{{ tag.strip() }}" class="tag">{{ tag.strip() }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Post Navigation -->
+                    <div class="post-navigation">
+                        {% if prev_blog %}
+                        <a href="/blog/{{ prev_blog.slug }}" class="nav-previous">
+                            <span class="nav-label"><i class="bi bi-arrow-left"></i> Previous Post</span>
+                            <span class="nav-title">{{ prev_blog.title }}</span>
+                        </a>
+                        {% endif %}
+                        
+                        {% if next_blog %}
+                        <a href="/blog/{{ next_blog.slug }}" class="nav-next">
+                            <span class="nav-label">Next Post <i class="bi bi-arrow-right"></i></span>
+                            <span class="nav-title">{{ next_blog.title }}</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Comments Section -->
+                    <div class="comments-section">
+                        <h3 class="comments-title">Comments ({{ blog.comments|length if blog.comments else 0 }})</h3>
+                        
+                        <!-- Comment Form -->
+                        <div class="comment-form-container">
+                            <h4>Leave a Comment</h4>
+                            {% if current_user %}
+                            <form class="comment-form" action="/api/blog/comments" method="post">
+                                <input type="hidden" name="blog_id" value="{{ blog.id }}">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <textarea class="form-control" name="content" rows="4" placeholder="Your Comment*" required></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-custom-primary">Post Comment</button>
+                                    </div>
+                                </div>
+                            </form>
+                            {% else %}
+                            <div class="login-to-comment">
+                                <p>Please <a href="{% url 'login' %}">login</a> to leave a comment.</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Comments List -->
+                        {% if blog.comments and blog.comments|length > 0 %}
+                        <div class="comments-list">
+                            {% for comment in blog.comments %}
+                            {% if comment.is_approved %}
+                            <div class="comment">
+                                <div class="comment-avatar">
+                                    {% if comment.user.profile_image %}
+                                    <img src="{{ comment.user.profile_image }}" alt="{{ comment.user.full_name or comment.user.username }}">
+                                    {% endif %}
+                                </div>
+                                <div class="comment-content">
+                                    <div class="comment-meta">
+                                        <h4 class="commenter-name">{{ comment.user.full_name or comment.user.username }}</h4>
+                                        <span class="comment-date">{{ comment.created_at.strftime('%B %d, %Y') }}</span>
+                                    </div>
+                                    <div class="comment-text">
+                                        <p>{{ comment.content }}</p>
+                                    </div>
+                                    <div class="comment-actions">
+                                        <a href="#" class="reply-link" onclick="showReplyForm({{ comment.id }})">Reply</a>
+                                    </div>
+                                    
+                                    <!-- Reply Form -->
+                                    <div id="reply-form-{{ comment.id }}" class="reply-form" style="display: none;">
+                                        {% if current_user %}
+                                        <form action="/api/blog/comments" method="post">
+                                            <input type="hidden" name="blog_id" value="{{ blog.id }}">
+                                            <input type="hidden" name="parent_id" value="{{ comment.id }}">
+                                            <textarea class="form-control" name="content" rows="3" placeholder="Your Reply*" required></textarea>
+                                            <div class="mt-2">
+                                                <button type="submit" class="btn btn-sm btn-custom-primary">Post Reply</button>
+                                                <button type="button" class="btn btn-sm btn-secondary" onclick="hideReplyForm({{ comment.id }})">Cancel</button>
+                                            </div>
+                                        </form>
+                                        {% else %}
+                                        <p>Please <a href="{% url 'login' %}">login</a> to reply.</p>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Replies -->
+                                    {% if comment.replies and comment.replies|length > 0 %}
+                                    <div class="comment-replies">
+                                        {% for reply in comment.replies %}
+                                        {% if reply.is_approved %}
+                                        <div class="comment-reply">
+                                            <div class="comment">
+                                                <div class="comment-avatar">
+                                                    {% if reply.user.profile_image %}
+                                                    <img src="{{ reply.user.profile_image }}" alt="{{ reply.user.full_name or reply.user.username }}">
+                                                    {% endif %}
+                                                </div>
+                                                <div class="comment-content">
+                                                    <div class="comment-meta">
+                                                        <h4 class="commenter-name">
+                                                            {{ reply.user.full_name or reply.user.username }}
+                                                            {% if reply.user.id == blog.author.id %}<span class="author-badge">Author</span>{% endif %}
+                                                        </h4>
+                                                        <span class="comment-date">{{ reply.created_at.strftime('%B %d, %Y') }}</span>
+                                                    </div>
+                                                    <div class="comment-text">
+                                                        <p>{{ reply.content }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                            
+                            {% if blog.comments|length > 5 %}
+                            <!-- Load More Comments Button -->
+                            <div class="load-more-comments">
+                                <button class="btn btn-custom-secondary">Load More Comments</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </article>
+            </div>
+            
+            <!-- Sidebar Column -->
+            <div class="col-lg-4">
+                <div class="blog-sidebar">
+                    <!-- Author Widget -->
+                    {% if blog.author %}
+                    <div class="sidebar-widget author-widget">
+                        <div class="widget-title">
+                            <h3>About the Author</h3>
+                        </div>
+                        <div class="author-info">
+                            <div class="author-image">
+                                {% if blog.author.profile_image %}
+                                <img src="{{ blog.author.profile_image }}" alt="{{ blog.author.full_name or blog.author.username }}">
+                                {% endif %}
+                            </div>
+                            <h4 class="author-name">{{ blog.author.full_name or blog.author.username }}</h4>
+                            <p class="author-description">
+                                {{ blog.author.bio or 'Author at our blog.' }}
+                            </p>
+                            <a href="{% url 'about' %}" class="btn btn-custom-secondary btn-sm">Read More</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Search Widget -->
+                    <div class="sidebar-widget search-widget">
+                        <form class="search-form" action="/blogs" method="get">
+                            <input type="text" name="search" placeholder="Search articles..." class="search-input">
+                            <button type="submit" class="search-btn"><i class="bi bi-search"></i></button>
+                        </form>
+                    </div>
+                    
+                    <!-- Popular Posts Widget -->
+                    {% if popular_posts %}
+                    <div class="sidebar-widget popular-posts-widget">
+                        <div class="widget-title">
+                            <h3>Popular Posts</h3>
+                        </div>
+                        <div class="popular-posts">
+                            {% for post in popular_posts %}
+                            <div class="popular-post">
+                                <div class="post-image">
+                                    <a href="/blog/{{ post.slug }}">
+                                        {% if post.featured_image %}
+                                        <img src="{{ post.featured_image }}" alt="{{ post.title }}">
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div class="post-info">
+                                    <h4><a href="/blog/{{ post.slug }}">{{ post.title }}</a></h4>
+                                    <div class="post-meta">
+                                        <span class="post-date">{{ post.published_at.strftime('%B %d, %Y') if post.published_at else post.created_at.strftime('%B %d, %Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Categories Widget -->
+                    {% if categories %}
+                    <div class="sidebar-widget categories-widget">
+                        <div class="widget-title">
+                            <h3>Categories</h3>
+                        </div>
+                        <ul class="category-list">
+                            {% for category in categories %}
+                            <li><a href="/blog/category/{{ category.slug }}">{{ category.name }} <span>({{ category.count }})</span></a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Tags Widget -->
+                    {% if tags %}
+                    <div class="sidebar-widget tags-widget">
+                        <div class="widget-title">
+                            <h3>Popular Tags</h3>
+                        </div>
+                        <div class="tag-cloud">
+                            {% for tag in tags %}
+                            <a href="/blog/tag/{{ tag.name }}" class="tag">{{ tag.name }}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Newsletter Widget -->
+                    <div class="sidebar-widget newsletter-widget">
+                        <div class="widget-title">
+                            <h3>Newsletter</h3>
+                        </div>
+                        <div class="newsletter-content">
+                            <p>Subscribe to our newsletter for exclusive recipes, tips, and offers.</p>
+                            <form class="newsletter-form" action="/api/subscribe" method="post">
+                                <input type="email" name="email" placeholder="Your Email Address" class="form-control" required>
+                                <button type="submit" class="btn btn-custom-primary btn-block">Subscribe</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Posts Section -->
+{% if related_posts %}
+<section class="related-posts-section">
+    <div class="container">
+        <div class="section-title">
+            <h2 class="section-heading">You May Also Like</h2>
+        </div>
+        
+        <div class="related-posts-grid">
+            {% for post in related_posts %}
+            <div class="related-post">
+                <div class="related-post-image">
+                    <a href="/blog/{{ post.slug }}">
+                        {% if post.featured_image %}
+                        <img src="{{ post.featured_image }}" alt="{{ post.title }}">
+                        {% endif %}
+                    </a>
+                    {% if post.categories and post.categories|length > 0 %}
+                    <div class="post-category">
+                        <a href="/blog/category/{{ post.categories[0].slug }}">{{ post.categories[0].name }}</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="related-post-content">
+                    <h3><a href="/blog/{{ post.slug }}">{{ post.title }}</a></h3>
+                    <div class="post-meta">
+                        <span class="post-date"><i class="bi bi-calendar3"></i> {{ post.published_at.strftime('%B %d, %Y') if post.published_at else post.created_at.strftime('%B %d, %Y') }}</span>
+                    </div>
+                    {% if post.excerpt %}
+                    <p>{{ post.excerpt }}</p>
+                    {% endif %}
+                    <a href="/blog/{{ post.slug }}" class="read-more">Read More <i class="bi bi-arrow-right"></i></a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sticky share sidebar
+    const shareSidebar = document.querySelector('.social-share-sidebar');
+    const postContent = document.querySelector('.post-text-content');
+    
+    if (shareSidebar && postContent && window.innerWidth > 992) {
+        window.addEventListener('scroll', function() {
+            const postTop = postContent.getBoundingClientRect().top;
+            const postBottom = postContent.getBoundingClientRect().bottom;
+            
+            if (postTop < 100 && postBottom > 600) {
+                shareSidebar.classList.add('sticky');
+            } else {
+                shareSidebar.classList.remove('sticky');
+            }
+        });
+    }
+});
+
+// Reply form handling
+function showReplyForm(commentId) {
+    document.getElementById('reply-form-' + commentId).style.display = 'block';
+}
+
+function hideReplyForm(commentId) {
+    document.getElementById('reply-form-' + commentId).style.display = 'none';
+}
+</script>
+{% endblock %}

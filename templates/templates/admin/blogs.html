@@ -1,0 +1,241 @@
+{% load static %}
+{% extends "admin/base.html" %}
+
+{% block title %}Blog Posts - Admin Panel{% endblock %}
+
+{% block header_title %}Blog Management{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h5 class="admin-card-title">
+                <i class="fas fa-blog"></i> Blog Posts
+            </h5>
+            <a href="{% url 'admin_blogs_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> New Post
+            </a>
+        </div>
+        
+        <div class="admin-card-body">
+            {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+            {% endif %}
+            
+            <!-- Filter Form -->
+            <div class="row mb-4">
+                <div class="col-md-9">
+                    <form action="/admin/blogs" method="get" class="d-flex gap-3">
+                        <div style="flex: 1.5;">
+                            <div class="input-group">
+                                <input type="text" name="search" class="form-control" placeholder="Search posts..."
+                                       value="{{ search if search else '' }}">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div style="flex: 1;">
+                            <select name="category_id" class="form-select">
+                                <option value="">All Categories</option>
+                                {% for category in categories %}
+                                <option value="{{ category.id }}" {% if category_id == category.id %}selected{% endif %}>
+                                    {{ category.name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <select name="status" class="form-select">
+                                <option value="">All Status</option>
+                                <option value="published" {% if status == 'published' %}selected{% endif %}>Published</option>
+                                <option value="draft" {% if status == 'draft' %}selected{% endif %}>Draft</option>
+                            </select>
+                        </div>
+                        {% if search or category_id or status %}
+                        <div>
+                            <a href="{% url 'admin_blogs' %}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Clear
+                            </a>
+                        </div>
+                        {% endif %}
+                    </form>
+                </div>
+                <div class="col-md-3 text-end">
+                    <span style="color: var(--admin-text-secondary);">
+                        Showing {{ posts|length }} of {{ total_posts }} posts
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Blog Posts Table -->
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th style="width: 40%;">Title</th>
+                            <th>Categories</th>
+                            <th>Status</th>
+                            <th>Author</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for post in posts %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if post.featured_image %}
+                                    <div style="width: 50px; height: 50px; overflow: hidden; border-radius: 5px;">
+                                        <img src="{{ post.featured_image }}" alt="{{ post.title }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <div style="font-weight: 600;">{{ post.title }}</div>
+                                        <small style="color: var(--admin-text-secondary);">{{ post.excerpt|truncate(60) if post.excerpt else '' }}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {% for category in post.categories %}
+                                <span class="badge bg-secondary">{{ category.name }}</span>
+                                {% else %}
+                                <span style="color: var(--admin-text-muted);">Uncategorized</span>
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% if post.is_published %}
+                                <span class="badge bg-success">Published</span>
+                                {% else %}
+                                <span class="badge bg-warning">Draft</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ post.author.username }}</td>
+                            <td>{{ post.created_at.strftime('%b %d, %Y') }}</td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a href="/blog/{{ post.slug }}" target="_blank" class="btn btn-icon" title="View">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="/admin/blogs/{{ post.id }}/edit" class="btn btn-icon" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <button type="button" class="btn btn-icon" title="Delete" 
+                                            onclick="confirmDelete({{ post.id }}, '{{ post.title }}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" class="text-center">
+                                <div style="padding: 2rem;">
+                                    <i class="fas fa-blog" style="font-size: 2rem; color: var(--admin-text-secondary); margin-bottom: 1rem;"></i>
+                                    <p>No blog posts found.</p>
+                                    <a href="{% url 'admin_blogs_create' %}" class="btn btn-primary mt-3">
+                                        <i class="fas fa-plus"></i> Create Post
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Pagination -->
+            {% if pages > 1 %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination">
+                    {% if page > 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="/admin/blogs?page={{ page - 1 }}{% if search %}&search={{ search }}{% endif %}{% if category_id %}&category_id={{ category_id }}{% endif %}{% if status %}&status={{ status }}{% endif %}">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                    </li>
+                    {% endif %}
+                    
+                    {% for p in range(1, pages + 1) %}
+                    <li class="page-item {% if p == page %}active{% endif %}">
+                        <a class="page-link" href="/admin/blogs?page={{ p }}{% if search %}&search={{ search }}{% endif %}{% if category_id %}&category_id={{ category_id }}{% endif %}{% if status %}&status={{ status }}{% endif %}">{{ p }}</a>
+                    </li>
+                    {% endfor %}
+                    
+                    {% if page < pages %}
+                    <li class="page-item">
+                        <a class="page-link" href="/admin/blogs?page={{ page + 1 }}{% if search %}&search={{ search }}{% endif %}{% if category_id %}&category_id={{ category_id }}{% endif %}{% if status %}&status={{ status }}{% endif %}">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="deleteModal" tabindex="-1" style="display: none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete the post "<span id="postTitle"></span>"?</p>
+                <p>This action cannot be undone. All comments associated with this post will also be deleted.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <form id="deleteForm" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(postId, postTitle) {
+    document.getElementById('deleteModal').style.display = 'block';
+    document.getElementById('postTitle').textContent = postTitle;
+    document.getElementById('deleteForm').action = `/admin/blogs/${postId}/delete`;
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+</script>
+{% endblock %}

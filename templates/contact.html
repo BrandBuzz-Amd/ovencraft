@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% block extra_css %}
+<link href="{% static 'css/contact.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Contact Hero Section -->
+<section class="contact-hero-section">
+    <div class="container">
+        <div class="contact-hero-content">
+            <h1 class="contact-hero-title">Contact Us</h1>
+            <p class="contact-hero-description">
+                Have questions about our woodfire ovens? We're here to help!
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Information Section -->
+<section class="contact-info-section">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Contact Form Column -->
+            <div class="col-lg-7">
+                <div class="contact-form-wrapper">
+                    <div class="contact-form-header">
+                        <h2>Get in Touch</h2>
+                        <p>Fill out the form below, and we'll get back to you as soon as possible.</p>
+                    </div>
+                    
+                    <form id="contactForm" class="contact-form">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">Full Name <span class="required">*</span></label>
+                                    <input type="text" id="name" name="name" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email Address <span class="required">*</span></label>
+                                    <input type="email" id="email" name="email" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="phone">Phone Number</label>
+                                    <input type="tel" id="phone" name="phone" class="form-control">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="subject">Subject <span class="required">*</span></label>
+                                    <select id="subject" name="subject" class="form-select" required>
+                                        <option value="" selected disabled>Select a subject</option>
+                                        <option value="Product Information">Product Information</option>
+                                        <option value="Order Status">Order Status</option>
+                                        <option value="Installation Support">Installation Support</option>
+                                        <option value="Maintenance Question">Maintenance Question</option>
+                                        <option value="Request Quote">Request Quote</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="message">Message <span class="required">*</span></label>
+                                    <textarea id="message" name="message" class="form-control" rows="6" required></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="form-submit">
+                                    <button type="submit" class="btn btn-custom-primary">Send Message</button>
+                                    <div class="form-message"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Contact Information Column -->
+            <div class="col-lg-5">
+                <div class="contact-info-wrapper">
+                    <div class="contact-info-header">
+                        <h2>Contact Information</h2>
+                        <p>Reach out to us through your preferred contact method.</p>
+                    </div>
+                    
+                    <div class="contact-info-content">
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Visit Us</h3>
+                                <p><a style="text-decoration: none; color: var(--primary-color);" href="https://maps.app.goo.gl/HJ2hwtxtQUa5MHbd6">32, Akshat industrial Park, Naroda GIDC (phase -1), 382330 Ahmedabad, Gujarat, India.</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Call Us</h3>
+                                <p><a style="text-decoration: none; color: var(--primary-color);" href="tel:+91 7874659091">+91 7874659091</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Email Us</h3>
+                                <p><a style="text-decoration: none; color: var(--primary-color);" href="mailto:ovencraft01@gmail.com">ovencraft01@gmail.com</a></p>
+                            </div>
+                        </div>
+                        
+                        <div class="contact-info-item">
+                            <div class="contact-icon">
+                                <i class="bi bi-clock"></i>
+                            </div>
+                            <div class="contact-details">
+                                <h3>Business Hours</h3>
+                                <p>Monday-Friday: 9am - 6pm<br>Saturday: 10am - 4pm<br>Sunday: Closed</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-connect">
+                        <h3>Connect With Us</h3>
+                        <div class="social-icons">
+                            <a href="https://www.instagram.com/ovencraft_01?igsh=MTg2d2Y0Y2c2eHdweA==" class="social-icon"><i class="bi bi-instagram"></i></a>
+                            <a href="https://youtube.com/@ovencraft1?si=K9JraciRtnuBVrUq" class="social-icon"><i class="bi bi-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="map-section">
+    <div class="map-container">
+        <!-- Replace with your actual Google Maps embed code -->
+        <iframe src="https://maps.google.com/maps?q=AKSHAT%20INDUSTRIAL%20PARK%2C%2032%2C%20GIDC%20Naroda%2C%20Ahmedabad%2C%20Gujarat%20382330&t=m&z=17&output=embed&iwloc=near" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    </div>
+</section>
+
+<!-- FAQ Highlight Section -->
+<section class="faq-highlight-section">
+    <div class="container">
+        <div class="faq-highlight-container">
+            <div class="faq-highlight-content">
+                <h2>Have Questions?</h2>
+                <p>Check out our frequently asked questions for quick answers to common inquiries about our woodfire ovens, installation, maintenance, and more.</p>
+                <a href="/faq" class="btn btn-custom-secondary">View FAQ</a>
+            </div>
+            <div class="faq-highlight-image">
+                 {% load static %}
+                 <img src="{% static 'images/logos/2150134251.jpg' %}" alt="Woodfire Oven FAQ">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    const formMessage = document.querySelector('.form-message');
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Show loading state
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Get form data
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    subject: document.getElementById('subject').value,
+                    message: document.getElementById('message').value,
+                    newsletter: document.getElementById('newsletter').checked
+                };
+                
+                // Send form data to server
+                const response = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                // Show success/error message
+                if (result.status === 'success') {
+                    formMessage.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
+                    contactForm.reset();
+                } else {
+                    formMessage.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+                }
+            } catch (error) {
+                formMessage.innerHTML = '<div class="alert alert-danger">An error occurred. Please try again later.</div>';
+            } finally {
+                // Reset button
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+                
+                // Clear message after 5 seconds
+                setTimeout(function() {
+                    formMessage.innerHTML = '';
+                }, 5000);
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

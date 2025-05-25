@@ -1,0 +1,345 @@
+{% load static %}
+{% extends "admin/base.html" %}
+
+{% block title %}Edit Gallery Item - Admin Panel{% endblock %}
+
+{% block header_title %}Edit Gallery Item{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-preview-container {
+        background-color: #0f0f0f;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .upload-preview-container img,
+    .upload-preview-container video {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .file-upload-area {
+        border: 2px dashed var(--admin-border-color);
+        border-radius: 8px;
+        padding: 40px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .file-upload-area:hover {
+        border-color: var(--admin-primary);
+        background-color: rgba(204, 153, 85, 0.05);
+    }
+    
+    .file-upload-icon {
+        font-size: 3rem;
+        color: var(--admin-text-secondary);
+        margin-bottom: 15px;
+    }
+    
+    .file-upload-text {
+        color: var(--admin-text-primary);
+        margin-bottom: 5px;
+    }
+    
+    .file-upload-hint {
+        color: var(--admin-text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    .hidden-file-input {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h5 class="admin-card-title">
+                <i class="fas fa-edit"></i> Edit Gallery Item
+            </h5>
+            <a href="{% url 'admin_gallery' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Gallery
+            </a>
+        </div>
+        
+        <div class="admin-card-body">
+            {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-7">
+                    <form method="POST" class="needs-validation" novalidate id="editForm" action="/admin/gallery/{{ gallery_item.id }}/edit">
+                        <div class="form-group">
+                            <label for="title" class="form-label">Title <span style="color: var(--admin-danger)">*</span></label>
+                            <input type="text" class="form-control" id="title" name="title" 
+                                  value="{{ gallery_item.title }}" required
+                                  placeholder="Enter a title for this gallery item">
+                            <div class="invalid-feedback">
+                                Please provide a title for the gallery item.
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" 
+                                     rows="4" placeholder="Optional description of this item">{{ gallery_item.description }}</textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="category_id" class="form-label">Category</label>
+                                    <select class="form-select" id="category_id" name="category_id">
+                                        <option value="">Select a category</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category.id }}" {% if gallery_item.category_id == category.id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="media_type" class="form-label">Media Type <span style="color: var(--admin-danger)">*</span></label>
+                                    <select class="form-select" id="media_type" name="media_type" required disabled>
+                                        <option value="image" {% if gallery_item.media_type == 'image' %}selected{% endif %}>Image</option>
+                                        <option value="video" {% if gallery_item.media_type == 'video' %}selected{% endif %}>Video</option>
+                                    </select>
+                                    <input type="hidden" name="media_type" value="{{ gallery_item.media_type }}">
+                                    <small style="color: var(--admin-text-secondary);">
+                                        Media type cannot be changed after uploading.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label for="alt_text" class="form-label">Alt Text</label>
+                            <input type="text" class="form-control" id="alt_text" name="alt_text" 
+                                  value="{{ gallery_item.alt_text }}"
+                                  placeholder="Alternative text for accessibility and SEO">
+                            <small style="color: var(--admin-text-secondary);">
+                                Descriptive text for screen readers and SEO (recommended for images).
+                            </small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tags" class="form-label">Tags</label>
+                            <input type="text" class="form-control" id="tags" name="tags" 
+                                  value="{{ gallery_item.tags }}"
+                                  placeholder="Enter tags separated by commas">
+                            <small style="color: var(--admin-text-secondary);">
+                                Optional tags to help with organization and searching (e.g., nature, wedding, product).
+                            </small>
+                        </div>
+                        
+                        <!-- File input removed since we don't allow changing the file in edit mode -->
+                    </form>
+                </div>
+                
+                <div class="col-md-5">
+                    <div class="upload-preview-container">
+                        <div id="previewContent">
+                            {% if gallery_item.media_type == 'image' %}
+                                {% set file_name = gallery_item.file_path.split('/')[-1] %}
+                                <img src="{% static \'uploads/gallery/{{ file_name }}\' %}" 
+                                     alt="{{ gallery_item.title }}">
+                            {% else %}
+                                {% set file_name = gallery_item.file_path.split('/')[-1] %}
+                                <video src="{% static \'uploads/gallery/{{ file_name }}\' %}" 
+                                       controls>
+                                    Your browser does not support the video tag.
+                                </video>
+                            {% endif %}
+                        </div>
+                        <div style="margin-top: 10px;">
+                            {% if gallery_item.media_type == 'image' %}
+                                <a href="{% static \'uploads/gallery/{{ file_name }}\' %}" 
+                                   target="_blank" 
+                                   class="btn btn-sm btn-secondary"
+                                   id="viewFullBtn">
+                                    <i class="fas fa-external-link-alt"></i> View Full Size
+                                </a>
+                            {% else %}
+                                <a href="{% static \'uploads/gallery/{{ file_name }}\' %}" 
+                                   target="_blank" 
+                                   class="btn btn-sm btn-secondary"
+                                   id="viewFullBtn">
+                                    <i class="fas fa-external-link-alt"></i> View Full Size
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card-footer" style="margin-top: 20px; padding: 0; border: none;">
+                        <div class="d-grid gap-2">
+                            <button type="submit" form="editForm" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            
+                            <button type="button" class="btn btn-danger" onclick="confirmDelete()">
+                                <i class="fas fa-trash"></i> Delete Item
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal" id="deleteModal" tabindex="-1" style="display: none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "{{ gallery_item.title }}"?</p>
+                <p>This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <form id="deleteForm" method="POST" action="/admin/gallery/{{ gallery_item.id }}/delete">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Form validation
+    const form = document.querySelector('.needs-validation');
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+    
+    // Extract the actual file path from gallery_item
+    const filePath = "{{ gallery_item.file_path }}";
+    console.log('Original file path from server:', filePath);
+    
+    // Fix path for image/video based on the extracted path
+    const mediaElement = document.querySelector('#previewContent img, #previewContent video');
+    if (mediaElement) {
+        fixMediaPath(mediaElement, filePath);
+    }
+});
+
+function fixMediaPath(element, originalPath) {
+    // Clean path from any URL or duplicated parts
+    let cleanPath = originalPath;
+    
+    // If path doesn't start with / or http, add /
+    if (!cleanPath.startsWith('/') && !cleanPath.startsWith('http')) {
+        cleanPath = '/' + cleanPath;
+    }
+    
+    // Extract just the relative path after /uploads/
+    if (cleanPath.includes('/uploads/')) {
+        cleanPath = '/uploads/' + cleanPath.split('/uploads/').pop();
+    }
+    
+    // Try different variations of the path
+    const pathVariations = [
+        // Original path as provided
+        originalPath,
+        
+        // Just use the clean path
+        cleanPath,
+        
+        // With /static prefix
+        '/static' + cleanPath,
+        
+        // Static + uploads directly (common FastAPI structure)
+        '/static/uploads/' + cleanPath.split('/').pop(),
+        
+        // Absolute URL to the file (if it's a full path)
+        originalPath.startsWith('http') ? originalPath : window.location.origin + cleanPath
+    ];
+    
+    console.log('Will try these path variations:', pathVariations);
+    
+    // Try loading with different paths
+    let currentIndex = 0;
+    
+    function tryNextPath() {
+        if (currentIndex >= pathVariations.length) {
+            console.log('All path variations failed');
+            return;
+        }
+        
+        const path = pathVariations[currentIndex];
+        console.log(`Trying path variation ${currentIndex + 1}:`, path);
+        
+        element.src = path;
+        currentIndex++;
+        
+        // For images we can check if loading succeeded
+        if (element.tagName === 'IMG') {
+            element.onload = function() {
+                console.log('Image loaded successfully with path:', path);
+                updateViewFullButton(path);
+            };
+            element.onerror = tryNextPath;
+        } else {
+            // For videos we can't easily check, so update button and continue
+            updateViewFullButton(path);
+        }
+    }
+    
+    // Start trying paths
+    tryNextPath();
+}
+
+function updateViewFullButton(correctPath) {
+    const viewFullBtn = document.getElementById('viewFullBtn');
+    if (viewFullBtn && correctPath) {
+        console.log('Updating view full button to use path:', correctPath);
+        viewFullBtn.href = correctPath;
+    }
+}
+
+function confirmDelete() {
+    document.getElementById('deleteModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('deleteModal').style.display = 'none';
+}
+</script>
+{% endblock %}

@@ -1,0 +1,333 @@
+{% load static %}
+{% extends "admin/base.html" %}
+
+{% block title %}Upload Gallery Item - Admin Panel{% endblock %}
+
+{% block header_title %}Upload Gallery Item{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-preview-container {
+        background-color: #0f0f0f;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        margin-top: 20px;
+    }
+    
+    .upload-preview-container img,
+    .upload-preview-container video {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    
+    .file-upload-area {
+        border: 2px dashed var(--admin-border-color);
+        border-radius: 8px;
+        padding: 40px 20px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .file-upload-area:hover {
+        border-color: var(--admin-primary);
+        background-color: rgba(204, 153, 85, 0.05);
+    }
+    
+    .file-upload-icon {
+        font-size: 3rem;
+        color: var(--admin-text-secondary);
+        margin-bottom: 15px;
+    }
+    
+    .file-upload-text {
+        color: var(--admin-text-primary);
+        margin-bottom: 5px;
+    }
+    
+    .file-upload-hint {
+        color: var(--admin-text-secondary);
+        font-size: 0.9rem;
+    }
+    
+    .hidden-file-input {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h5 class="admin-card-title">
+                <i class="fas fa-upload"></i> Upload Gallery Item
+            </h5>
+            <a href="{% url 'admin_gallery' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Gallery
+            </a>
+        </div>
+        
+        <div class="admin-card-body">
+            {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-7">
+                    <form method="POST" enctype="multipart/form-data" class="needs-validation" novalidate id="uploadForm">
+                        <div class="form-group">
+                            <label for="title" class="form-label">Title <span style="color: var(--admin-danger)">*</span></label>
+                            <input type="text" class="form-control" id="title" name="title" 
+                                  value="{{ form_data.title if form_data else '' }}" required
+                                  placeholder="Enter a title for this gallery item">
+                            <div class="invalid-feedback">
+                                Please provide a title for the gallery item.
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" 
+                                     rows="4" placeholder="Optional description of this item">{{ form_data.description if form_data else '' }}</textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="category_id" class="form-label">Category</label>
+                                    <select class="form-select" id="category_id" name="category_id">
+                                        <option value="">Select a category</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category.id }}" {% if form_data and form_data.category_id == category.id %}selected{% endif %}>
+                                            {{ category.name }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="media_type" class="form-label">Media Type <span style="color: var(--admin-danger)">*</span></label>
+                                    <select class="form-select" id="media_type" name="media_type" required>
+                                        <option value="">Select media type</option>
+                                        <option value="image" {% if form_data and form_data.media_type == 'image' %}selected{% endif %}>Image</option>
+                                        <option value="video" {% if form_data and form_data.media_type == 'video' %}selected{% endif %}>Video</option>
+                                    </select>
+                                    <div class="invalid-feedback">
+                                        Please select a media type.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label for="alt_text" class="form-label">Alt Text</label>
+                            <input type="text" class="form-control" id="alt_text" name="alt_text" 
+                                  value="{{ form_data.alt_text if form_data else '' }}"
+                                  placeholder="Alternative text for accessibility and SEO">
+                            <small style="color: var(--admin-text-secondary);">
+                                Descriptive text for screen readers and SEO (recommended for images).
+                            </small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="tags" class="form-label">Tags</label>
+                            <input type="text" class="form-control" id="tags" name="tags" 
+                                  value="{{ form_data.tags if form_data else '' }}"
+                                  placeholder="Enter tags separated by commas">
+                            <small style="color: var(--admin-text-secondary);">
+                                Optional tags to help with organization and searching (e.g., nature, wedding, product).
+                            </small>
+                        </div>
+                        
+                        <input type="file" id="file" name="file" class="hidden-file-input" required 
+                               accept="image/*,video/*">
+                    </form>
+                </div>
+                
+                <div class="col-md-5">
+                    <div class="file-upload-area" id="uploadArea">
+                        <div class="file-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h5 class="file-upload-text">Drag & Drop or Click to Upload</h5>
+                        <p class="file-upload-hint">Supported formats: JPG, PNG, GIF, MP4, WebM</p>
+                        <p class="file-upload-hint">Maximum file size: 10MB</p>
+                    </div>
+                    
+                    <div class="upload-preview-container" id="previewContainer" style="display: none;">
+                        <div id="previewContent"></div>
+                        <div style="margin-top: 10px;">
+                            <button type="button" class="btn btn-sm btn-secondary" id="changeFileBtn">
+                                <i class="fas fa-sync-alt"></i> Change File
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card-footer" style="margin-top: 20px; padding: 0; border: none;">
+                        <button type="submit" form="uploadForm" class="btn btn-primary w-100">
+                            <i class="fas fa-upload"></i> Upload Item
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('file');
+    const previewContainer = document.getElementById('previewContainer');
+    const previewContent = document.getElementById('previewContent');
+    const changeFileBtn = document.getElementById('changeFileBtn');
+    const mediaTypeSelect = document.getElementById('media_type');
+    
+    // Form validation
+    const form = document.querySelector('.needs-validation');
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+    });
+    
+    // Click on upload area to trigger file input
+    uploadArea.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    // Drag and drop functionality
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, preventDefaults, false);
+    });
+    
+    function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+    
+    ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, highlight, false);
+    });
+    
+    ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+    
+    function highlight() {
+        uploadArea.style.borderColor = 'var(--admin-primary)';
+        uploadArea.style.backgroundColor = 'rgba(204, 153, 85, 0.05)';
+    }
+    
+    function unhighlight() {
+        uploadArea.style.borderColor = 'var(--admin-border-color)';
+        uploadArea.style.backgroundColor = 'transparent';
+    }
+    
+    uploadArea.addEventListener('drop', handleDrop, false);
+    
+    function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files.length) {
+            fileInput.files = files;
+            updatePreview(files[0]);
+            
+            // Auto-detect media type
+            const fileType = files[0].type;
+            if (fileType.startsWith('image/')) {
+                mediaTypeSelect.value = 'image';
+            } else if (fileType.startsWith('video/')) {
+                mediaTypeSelect.value = 'video';
+            }
+        }
+    }
+    
+    // Handle file selection
+    fileInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            updatePreview(this.files[0]);
+            
+            // Auto-detect media type
+            const fileType = this.files[0].type;
+            if (fileType.startsWith('image/')) {
+                mediaTypeSelect.value = 'image';
+            } else if (fileType.startsWith('video/')) {
+                mediaTypeSelect.value = 'video';
+            }
+        }
+    });
+    
+    // Change file button
+    changeFileBtn.addEventListener('click', function() {
+        fileInput.click();
+    });
+    
+    // Update preview based on file
+    function updatePreview(file) {
+        previewContent.innerHTML = '';
+        
+        if (file.type.startsWith('image/')) {
+            const img = document.createElement('img');
+            img.file = file;
+            previewContent.appendChild(img);
+            
+            const reader = new FileReader();
+            reader.onload = (function(aImg) { 
+                return function(e) { 
+                    aImg.src = e.target.result; 
+                }; 
+            })(img);
+            reader.readAsDataURL(file);
+            
+        } else if (file.type.startsWith('video/')) {
+            const video = document.createElement('video');
+            video.controls = true;
+            video.muted = true;
+            previewContent.appendChild(video);
+            
+            const reader = new FileReader();
+            reader.onload = (function(aVideo) { 
+                return function(e) { 
+                    aVideo.src = e.target.result; 
+                }; 
+            })(video);
+            reader.readAsDataURL(file);
+        }
+        
+        // Show preview, hide upload area
+        uploadArea.style.display = 'none';
+        previewContainer.style.display = 'block';
+    }
+    
+    // Media type validation
+    mediaTypeSelect.addEventListener('change', function() {
+        if (this.value === 'image') {
+            fileInput.accept = 'image/*';
+        } else if (this.value === 'video') {
+            fileInput.accept = 'video/*';
+        } else {
+            fileInput.accept = 'image/*,video/*';
+        }
+    });
+});
+</script>
+{% endblock %}

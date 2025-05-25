@@ -1,0 +1,291 @@
+{% load static %}
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link href="{% static '/css/blog.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<!-- Blog Hero Section -->
+<section class="blog-hero-section">
+    <div class="container">
+        <div class="blog-hero-content">
+            <h1 class="blog-hero-title">Our Blog</h1>
+            <p class="blog-hero-description">
+                Woodfire cooking tips, recipes, and insights from our experts.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Blog Content Section -->
+<section class="blog-content-section">
+    <div class="container">
+        <div class="row">
+            <!-- Main Blog Content -->
+            <div class="col-lg-8">
+                <div class="blog-posts-container">
+                    {% for blog in blogs %}
+                    <!-- Blog Post -->
+                    <article class="blog-post">
+                        <div class="blog-post-image">
+                            <img src="{{ blog.featured_image or 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop' }}" 
+                                 alt="{{ blog.title }}">
+                            {% if blog.categories and blog.categories|length > 0 %}
+                                <div class="post-category">{{ blog.categories[0].name }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="blog-post-content">
+                            <div class="post-meta">
+                                <span class="post-date"><i class="bi bi-calendar3"></i> {{ blog.published_at.strftime('%B %d, %Y') if blog.published_at else blog.created_at.strftime('%B %d, %Y') }}</span>
+                                {% if blog.author %}
+                                <span class="post-author"><i class="bi bi-person"></i> {{ blog.author.full_name or blog.author.username }}</span>
+                                {% endif %}
+                                <span class="post-comments"><i class="bi bi-chat"></i> {{ blog.comments|length if blog.comments else 0 }} Comments</span>
+                            </div>
+                            <h2 class="post-title"><a href="/blog/{{ blog.slug }}">{{ blog.title }}</a></h2>
+                            <div class="post-excerpt">
+                                <p>{{ blog.excerpt or blog.content|striptags|truncate(150) }}</p>
+                            </div>
+                            <a href="/blog/{{ blog.slug }}" class="read-more">Continue Reading <i class="bi bi-arrow-right"></i></a>
+                        </div>
+                    </article>
+                    {% else %}
+                    <div class="alert alert-info">
+                        <p>No blog posts available at the moment. Check back soon for new content!</p>
+                    </div>
+                    {% endfor %}
+                    
+                    <!-- Pagination -->
+                    {% if pages > 1 %}
+                    <nav aria-label="Page navigation" class="mt-5">
+                        <ul class="pagination justify-content-center">
+                            {% if page > 1 %}
+                            <li class="page-item">
+                                <a class="page-link" href="/blogs?page={{ page - 1 }}{% if current_category %}&category={{ current_category }}{% endif %}" 
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            
+                            {% for p in range(1, pages + 1) %}
+                            <li class="page-item {% if p == page %}active{% endif %}">
+                                <a class="page-link" href="/blogs?page={{ p }}{% if current_category %}&category={{ current_category }}{% endif %}">
+                                    {{ p }}
+                                </a>
+                            </li>
+                            {% endfor %}
+                            
+                            {% if page < pages %}
+                            <li class="page-item">
+                                <a class="page-link" href="/blogs?page={{ page + 1 }}{% if current_category %}&category={{ current_category }}{% endif %}" 
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+                    
+                    <!-- Load More Button (Alternative to pagination) -->
+                    {% if page < pages %}
+                    <div class="load-more-container">
+                        <button id="load-more-btn" class="btn btn-custom-secondary load-more-btn" 
+                                data-page="{{ page }}" data-category="{{ current_category or '' }}">
+                            <span>Load More Posts</span>
+                            <div class="spinner-border spinner-border-sm text-light d-none" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <div class="blog-sidebar">
+                    <!-- Search Widget -->
+                    <div class="sidebar-widget search-widget">
+                        <form class="search-form" action="/blogs" method="get">
+                            <input type="text" name="search" placeholder="Search articles..." class="search-input">
+                            <button type="submit" class="search-btn"><i class="bi bi-search"></i></button>
+                        </form>
+                    </div>
+                    
+                    <!-- Categories Widget -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">Categories</h3>
+                        <ul class="category-list">
+                            {% for category in categories %}
+                            <li>
+                                <a href="/blogs?category={{ category.slug }}">
+                                    {{ category.name }} 
+                                    <span>({{ category.blogs|length if category.blogs else 0 }})</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <!-- Recent Posts Widget -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">Recent Posts</h3>
+                        <ul class="recent-posts">
+                            {% for blog in blogs[:3] %}
+                            <li>
+                                <div class="post-thumb">
+                                    <img src="{{ blog.featured_image or 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=150&auto=format&fit=crop' }}" 
+                                         alt="{{ blog.title }}">
+                                </div>
+                                <div class="post-info">
+                                    <h4><a href="/blog/{{ blog.slug }}">{{ blog.title }}</a></h4>
+                                    <span class="post-date">{{ blog.published_at.strftime('%B %d, %Y') if blog.published_at else blog.created_at.strftime('%B %d, %Y') }}</span>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    <!-- Tags Widget -->
+                    <div class="sidebar-widget">
+                        <h3 class="widget-title">Popular Tags</h3>
+                        <div class="tag-cloud">
+                            {% set all_tags = [] %}
+                            {% for blog in blogs %}
+                                {% for category in blog.categories %}
+                                    {% if category.name not in all_tags %}
+                                        {% set _ = all_tags.append(category.name) %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            
+                            {% for tag in all_tags %}
+                            <a href="/blogs?tag={{ tag|lower }}" class="tag">{{ tag }}</a>
+                            {% endfor %}
+                            
+                            <!-- Add some default tags if there are few posts -->
+                            {% if all_tags|length < 5 %}
+                            <a href="/blogs?tag=pizza" class="tag">Pizza</a>
+                            <a href="/blogs?tag=bread" class="tag">Bread</a>
+                            <a href="/blogs?tag=techniques" class="tag">Techniques</a>
+                            <a href="/blogs?tag=wood" class="tag">Wood</a>
+                            <a href="/blogs?tag=cooking" class="tag">Cooking</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Load More JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const loadMoreBtn = document.getElementById('load-more-btn');
+    if (loadMoreBtn) {
+        const spinner = loadMoreBtn.querySelector('.spinner-border');
+        const btnText = loadMoreBtn.querySelector('span');
+        let currentPage = parseInt(loadMoreBtn.getAttribute('data-page')) || 1;
+        const category = loadMoreBtn.getAttribute('data-category') || '';
+        
+        loadMoreBtn.addEventListener('click', function() {
+            // Show spinner, hide text
+            spinner.classList.remove('d-none');
+            btnText.style.opacity = '0';
+            
+            // Increment page counter
+            currentPage++;
+            
+            // Prepare fetch URL
+            let fetchUrl = `/api/blog/posts?page=${currentPage}&limit=6`;
+            if (category) {
+                fetchUrl += `&category=${category}`;
+            }
+            
+            // Fetch next page of posts
+            fetch(fetchUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Hide spinner, show text
+                    spinner.classList.add('d-none');
+                    btnText.style.opacity = '1';
+                    
+                    // Check if we have results
+                    if (data.items && data.items.length > 0) {
+                        // Get container to append posts
+                        const container = document.querySelector('.blog-posts-container');
+                        
+                        // Insert new posts before load more button
+                        data.items.forEach(blog => {
+                            const postHtml = createPostHtml(blog);
+                            container.insertAdjacentHTML('beforeend', postHtml);
+                        });
+                        
+                        // Update button data attribute
+                        loadMoreBtn.setAttribute('data-page', currentPage);
+                        
+                        // Hide button if we've reached the last page
+                        if (currentPage >= data.pages) {
+                            loadMoreBtn.style.display = 'none';
+                        }
+                    } else {
+                        // No more posts, hide button
+                        loadMoreBtn.style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading more posts:', error);
+                    // Reset button state
+                    spinner.classList.add('d-none');
+                    btnText.style.opacity = '1';
+                    btnText.textContent = 'Error Loading Posts';
+                    setTimeout(() => {
+                        btnText.textContent = 'Try Again';
+                    }, 2000);
+                });
+        });
+    }
+    
+    // Helper function to create HTML for a post
+    function createPostHtml(blog) {
+        const date = new Date(blog.created_at).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+        
+        const categoryHtml = blog.categories && blog.categories.length > 0 
+            ? `<div class="post-category">${blog.categories[0].name}</div>` 
+            : '';
+        
+        const excerpt = blog.excerpt || blog.content.replace(/<[^>]*>/g, '').substring(0, 150) + '...';
+        
+        return `
+        <article class="blog-post">
+            <div class="blog-post-image">
+                <img src="${blog.featured_image || 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=800&auto=format&fit=crop'}" 
+                     alt="${blog.title}">
+                ${categoryHtml}
+            </div>
+            <div class="blog-post-content">
+                <div class="post-meta">
+                    <span class="post-date"><i class="bi bi-calendar3"></i> ${date}</span>
+                    <span class="post-author"><i class="bi bi-person"></i> ${blog.author ? (blog.author.full_name || blog.author.username) : 'Unknown'}</span>
+                    <span class="post-comments"><i class="bi bi-chat"></i> ${blog.comments ? blog.comments.length : 0} Comments</span>
+                </div>
+                <h2 class="post-title"><a href="/blog/${blog.slug}">${blog.title}</a></h2>
+                <div class="post-excerpt">
+                    <p>${excerpt}</p>
+                </div>
+                <a href="/blog/${blog.slug}" class="read-more">Continue Reading <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </article>
+        `;
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,342 @@
+{% load static %}
+{% extends "admin/base.html" %}
+
+{% block title %}{{ 'Edit' if blog else 'Create' }} Blog Post - Admin Panel{% endblock %}
+
+{% block header_title %}{{ 'Edit Post' if blog else 'New Post' }}{% endblock %}
+
+{% block extra_css %}
+<!-- TinyMCE CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tinymce@5.10.2/skins/ui/oxide-dark/skin.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/tinymce@5.10.2/skins/ui/oxide-dark/content.min.css" rel="stylesheet">
+<style>
+    .image-preview {
+        max-height: 200px;
+        max-width: 100%;
+        margin-top: 10px;
+        border-radius: 5px;
+        border: 1px solid var(--admin-border-color);
+    }
+    
+    /* TinyMCE dark theme adjustments */
+    .tox .tox-tbtn {
+        color: #ccc !important;
+    }
+    
+    .tox .tox-tbtn svg {
+        fill: #ccc !important;
+    }
+    
+    .tox .tox-tbtn:hover svg {
+        fill: #fff !important;
+    }
+    
+    .tox-tinymce {
+        border-color: var(--admin-border-color) !important;
+        border-radius: 5px !important;
+    }
+    
+    .category-select {
+        min-height: 120px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-content">
+    <div class="admin-card">
+        <div class="admin-card-header">
+            <h5 class="admin-card-title">
+                <i class="fas fa-{% if blog %}edit{% else %}plus{% endif %}"></i>
+                {% if blog %}Edit Post: {{ blog.title }}{% else %}Create New Post{% endif %}
+            </h5>
+            <a href="{% url 'admin_blogs' %}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Posts
+            </a>
+        </div>
+        
+        <div class="admin-card-body">
+            {% if error %}
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> {{ error }}
+            </div>
+            {% endif %}
+            
+            {% if success %}
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i> {{ success }}
+            </div>
+            {% endif %}
+            
+            <form method="POST" action="{% if blog %}/admin/blogs/{{ blog.id }}/edit{% else %}/admin/blogs/create{% endif %}" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <div class="row">
+                    <!-- Title -->
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="title" class="form-label">Title <span style="color: var(--admin-danger)">*</span></label>
+                            <input type="text" id="title" name="title" class="form-control" required 
+                                   value="{{ blog.title if blog else form_data.title if form_data else '' }}"
+                                   placeholder="Enter post title">
+                            <div class="invalid-feedback">
+                                Please provide a post title.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slug -->
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="slug" class="form-label">Slug <span style="color: var(--admin-danger)">*</span></label>
+                            <input type="text" id="slug" name="slug" class="form-control" required 
+                                   value="{{ blog.slug if blog else form_data.slug if form_data else '' }}"
+                                   placeholder="post-url-slug">
+                            <div class="invalid-feedback">
+                                Please provide a slug.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="content" class="form-label">Content <span style="color: var(--admin-danger)">*</span></label>
+                            <textarea id="content" name="content" class="form-control" required>{{ blog.content if blog else form_data.content if form_data else '' }}</textarea>
+                            <div class="invalid-feedback">
+                                Please provide content for the post.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2-column layout for metadata -->
+                    <div class="col-md-8">
+                        <!-- Excerpt -->
+                        <div class="form-group">
+                            <label for="excerpt" class="form-label">Excerpt</label>
+                            <textarea id="excerpt" name="excerpt" class="form-control" rows="3"
+                                     placeholder="A brief summary of your post">{{ blog.excerpt if blog else form_data.excerpt if form_data else '' }}</textarea>
+                            <small style="color: var(--admin-text-secondary);">
+                                A short summary of your post. If left empty, the system will use the first few sentences of your content.
+                            </small>
+                        </div>
+                        
+                        <!-- Meta Title & Description for SEO -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="meta_title" class="form-label">Meta Title</label>
+                                    <input type="text" id="meta_title" name="meta_title" class="form-control" 
+                                          value="{{ blog.meta_title if blog else form_data.meta_title if form_data else '' }}"
+                                          placeholder="SEO title (defaults to post title)">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="meta_description" class="form-label">Meta Description</label>
+                                    <input type="text" id="meta_description" name="meta_description" class="form-control" 
+                                          value="{{ blog.meta_description if blog else form_data.meta_description if form_data else '' }}"
+                                          placeholder="SEO description">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sidebar elements -->
+                    <div class="col-md-4">
+                        <div style="background-color: rgba(0,0,0,0.1); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                            <!-- Publication Status -->
+                            <div class="form-group mb-3">
+                                <label class="form-label">Publication Status</label>
+                                <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="is_published" id="statusPublished" value="true"
+                                              {% if blog and blog.is_published %}checked{% elif form_data and form_data.is_published %}checked{% endif %}>
+                                        <label class="form-check-label" for="statusPublished">
+                                            Published
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="is_published" id="statusDraft" value="false"
+                                              {% if blog and not blog.is_published %}checked{% elif form_data and not form_data.is_published %}checked{% elif not blog and not form_data %}checked{% endif %}>
+                                        <label class="form-check-label" for="statusDraft">
+                                            Draft
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Featured Image -->
+                            <div class="form-group mb-3">
+                                <label for="featured_image" class="form-label">Featured Image</label>
+                                <input type="file" id="featured_image" name="featured_image" class="form-control" accept="image/*">
+                                {% if blog and blog.featured_image %}
+                                <div class="mt-2">
+                                    <img src="{{ blog.featured_image }}" alt="Featured Image" class="image-preview">
+                                    <input type="hidden" name="existing_featured_image" value="{{ blog.featured_image }}">
+                                    <div class="form-check mt-2">
+                                        <input class="form-check-input" type="checkbox" id="remove_image" name="remove_image">
+                                        <label class="form-check-label" for="remove_image">Remove current image</label>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <!-- Categories -->
+                            <div class="form-group">
+                                <label for="category_ids" class="form-label">Categories</label>
+                                <select id="category_ids" name="category_ids" class="form-select category-select" multiple>
+                                    {% for category in categories %}
+                                    <option value="{{ category.id }}" 
+                                         {% if blog and category.id in blog_category_ids %}selected{% endif %}
+                                         {% if form_data and form_data.category_ids and category.id in form_data.category_ids %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                                <small style="color: var(--admin-text-secondary);">
+                                    Hold Ctrl/Cmd to select multiple categories
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-card-footer">
+                    <div class="d-flex gap-3">
+                        <button type="submit" name="save" value="draft" class="btn btn-secondary">
+                            <i class="fas fa-save"></i> Save as Draft
+                        </button>
+                        <button type="submit" name="save" value="publish" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> {% if blog %}Update{% else %}Publish{% endif %} Post
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- TinyMCE 5 -->
+<script src="https://cdn.jsdelivr.net/npm/tinymce@5.10.2/tinymce.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize TinyMCE
+    tinymce.init({
+        selector: '#content',
+        skin: 'oxide-dark',
+        content_css: 'dark',
+        height: 500,
+        menubar: true,
+        plugins: [
+            'advlist autolink lists link image charmap print preview anchor',
+            'searchreplace visualblocks code fullscreen',
+            'insertdatetime media table paste code help wordcount'
+        ],
+        toolbar: 'undo redo | formatselect | ' +
+            'bold italic backcolor | alignleft aligncenter ' +
+            'alignright alignjustify | bullist numlist outdent indent | ' +
+            'removeformat | link image media | code fullscreen help',
+        content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif; font-size: 14px; color: #e0e0e0; }',
+        images_upload_url: '/admin/blogs/upload-image',
+        images_upload_handler: function (blobInfo, success, failure) {
+            var xhr, formData;
+            xhr = new XMLHttpRequest();
+            xhr.withCredentials = false;
+            xhr.open('POST', '/admin/blogs/upload-image');
+            
+            xhr.onload = function() {
+                var json;
+                if (xhr.status != 200) {
+                    failure('HTTP Error: ' + xhr.status);
+                    return;
+                }
+                json = JSON.parse(xhr.responseText);
+                if (!json || typeof json.url != 'string') {
+                    failure('Invalid JSON: ' + xhr.responseText);
+                    return;
+                }
+                success(json.url);
+            };
+            
+            formData = new FormData();
+            formData.append('file', blobInfo.blob(), blobInfo.filename());
+            
+            xhr.send(formData);
+        },
+        setup: function(editor) {
+            // Auto-save every 30 seconds
+            setInterval(function() {
+                editor.save();
+            }, 30000);
+        }
+    });
+    
+    // Auto-generate slug from title
+    document.getElementById('title').addEventListener('input', function(e) {
+        if (!document.getElementById('slug').value || document.getElementById('slug').dataset.autoGenerated === 'true') {
+            const slug = e.target.value
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/(^-|-$)/g, '');
+            document.getElementById('slug').value = slug;
+            document.getElementById('slug').dataset.autoGenerated = 'true';
+        }
+    });
+    
+    // When slug is manually edited, stop auto-generating it
+    document.getElementById('slug').addEventListener('input', function() {
+        this.dataset.autoGenerated = 'false';
+    });
+    
+    // Preview uploaded image
+    document.getElementById('featured_image').addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                let imagePreview = document.querySelector('.image-preview');
+                if (imagePreview) {
+                    imagePreview.src = e.target.result;
+                } else {
+                    imagePreview = document.createElement('img');
+                    imagePreview.classList.add('image-preview');
+                    imagePreview.src = e.target.result;
+                    document.getElementById('featured_image').parentNode.appendChild(imagePreview);
+                }
+            }
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    
+    // Handle remove image checkbox
+    const removeImageCheckbox = document.getElementById('remove_image');
+    if (removeImageCheckbox) {
+        removeImageCheckbox.addEventListener('change', function() {
+            const imagePreview = document.querySelector('.image-preview');
+            if (imagePreview) {
+                imagePreview.style.opacity = this.checked ? '0.3' : '1';
+            }
+        });
+    }
+    
+    // Handle "Save as Draft" button
+    document.querySelector('button[name="save"][value="draft"]').addEventListener('click', function() {
+        document.getElementById('statusDraft').checked = true;
+    });
+    
+    // Form validation
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function(form) {
+        form.addEventListener('submit', function(event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>
+{% endblock %}

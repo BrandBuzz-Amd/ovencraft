@@ -1,0 +1,159 @@
+{% load static %}
+{% extends "admin/base.html" %}
+
+{% block title %}Gallery - Admin Panel{% endblock %}
+
+{% block header_title %}Gallery Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <!-- Header with Upload Button -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">Gallery Items</h4>
+        <a href="{% url 'admin_gallery_upload' %}" class="btn btn-primary">
+            <i class="fas fa-upload"></i> Upload New Item
+        </a>
+    </div>
+
+    <!-- Alerts -->
+    {% if error %}
+    <div class="alert alert-danger">
+        {{ error }}
+    </div>
+    {% endif %}
+    
+    {% if success %}
+    <div class="alert alert-success">
+        {{ success }}
+    </div>
+    {% endif %}
+
+    <!-- Simple Filter Bar -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <select id="category_filter" class="form-select" onchange="applyFilters()">
+                <option value="">All Categories</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}" {% if current_category_id == category.id %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-6">
+            <select id="media_filter" class="form-select" onchange="applyFilters()">
+                <option value="">All Media Types</option>
+                <option value="image" {% if current_media_type == 'image' %}selected{% endif %}>Images</option>
+                <option value="video" {% if current_media_type == 'video' %}selected{% endif %}>Videos</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Gallery Table -->
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th style="width: 100px">Preview</th>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Type</th>
+                    <th>Uploaded</th>
+                    <th style="width: 150px">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>
+                        {% if item.media_type == 'image' %}
+                            <img src="{{ item.file_path }}" class="img-thumbnail" style="width: 80px; height: 80px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-dark d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                                <i class="fas fa-video text-light fa-2x"></i>
+                            </div>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="fw-medium">{{ item.title }}</div>
+                        {% if item.description %}
+                        <small class="text-muted">{{ item.description|truncate(100) }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.category %}
+                        <span class="badge bg-secondary">{{ item.category.name }}</span>
+                        {% else %}
+                        <span class="text-muted">-</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="badge {% if item.media_type == 'image' %}bg-info{% else %}bg-warning{% endif %}">
+                            {{ item.media_type }}
+                        </span>
+                    </td>
+                    <td>
+                        {{ item.created_at.strftime('%Y-%m-%d %H:%M') if item.created_at else '' }}
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="{{ item.file_path }}" target="_blank" class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a href="/admin/gallery/{{ item.id }}/edit" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="/admin/gallery/{{ item.id }}/delete" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete {{ item.title }}?');">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    {% if pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            <li class="page-item {% if page == 1 %}disabled{% endif %}">
+                <a class="page-link" href="/admin/gallery?page={{ page - 1 }}{% if current_category_id %}&category_id={{ current_category_id }}{% endif %}{% if current_media_type %}&media_type={{ current_media_type }}{% endif %}">
+                    Previous
+                </a>
+            </li>
+            {% for p in range(1, pages + 1) %}
+            <li class="page-item {% if p == page %}active{% endif %}">
+                <a class="page-link" href="/admin/gallery?page={{ p }}{% if current_category_id %}&category_id={{ current_category_id }}{% endif %}{% if current_media_type %}&media_type={{ current_media_type }}{% endif %}">
+                    {{ p }}
+                </a>
+            </li>
+            {% endfor %}
+            <li class="page-item {% if page == pages %}disabled{% endif %}">
+                <a class="page-link" href="/admin/gallery?page={{ page + 1 }}{% if current_category_id %}&category_id={{ current_category_id }}{% endif %}{% if current_media_type %}&media_type={{ current_media_type }}{% endif %}">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function applyFilters() {
+    const category = document.getElementById('category_filter').value;
+    const mediaType = document.getElementById('media_filter').value;
+    
+    let url = '/admin/gallery?';
+    if (category) url += `category_id=${category}&`;
+    if (mediaType) url += `media_type=${mediaType}&`;
+    
+    window.location.href = url.slice(0, -1); // Remove trailing & or ?
+}
+</script>
+{% endblock %}
