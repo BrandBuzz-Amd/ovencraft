@@ -186,9 +186,7 @@
     background-color: #bd081c;
 }
 
-.share-link.linkedin:hover {
-    background-color: #0077b5;
-}
+
 
 .share-link.email:hover {
     background-color: var(--primary-color);
