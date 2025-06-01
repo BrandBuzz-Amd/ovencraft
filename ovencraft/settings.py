@@ -5,7 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-secret-key'
 DEBUG = True
-ALLOWED_HOSTS = ['65.0.180.107' ]
+ALLOWED_HOSTS = ['ovencraft.in', 'www.ovencraft.in','65.0.180.107'  ]
 
 # Application definition
 INSTALLED_APPS = [
