@@ -2,8 +2,7 @@ import os
 from pathlib import Path
 
 # Build paths inside the project
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-secret-key'
 DEBUG = True
 ALLOWED_HOSTS = ['65.0.180.107' ]
@@ -69,8 +68,8 @@ DATABASES = {
 
 # Static files
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # for collectstatic
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]  # optional
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
