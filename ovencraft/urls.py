@@ -3,6 +3,12 @@ from django.urls import path, include
 from core import views as core_views  # Add this line
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.sitemaps.views import sitemap
+from blog.sitemap import BlogSitemap
+
+sitemaps = {
+    'blogs': BlogSitemap,
+}
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -17,6 +23,8 @@ urlpatterns = [
     path("product-details/", core_views.product_details, name="product-details"),  # product details URL
     path("faq/", core_views.faq, name="faq"),  # added faq URL
     path("privacy-policy/", core_views.privacy_policy, name="privacy-policy"),  # privacy policy URL
+
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
 
 if settings.DEBUG:
