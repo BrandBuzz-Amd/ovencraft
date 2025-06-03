@@ -7,7 +7,21 @@
     <meta name="keywords" content="products, services, high quality, premium">
     <meta name="author" content="Your Company Name">
     <title>{{ title }} - Oven Craft</title>
-    
+
+    {% comment %} Open Graph and Twitter Card meta tags for social sharing {% endcomment %}
+    <meta property="og:title" content="{{ og_title|default:title }}">
+    <meta property="og:description" content="{{ og_description|default:'Your premium products and services website. Discover our high-quality offerings.' }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:image" content="{{ og_image|default:request.build_absolute_uri|add:'static/images/logo.png' }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ twitter_title|default:title }}">
+    <meta name="twitter:description" content="{{ twitter_description|default:'Your premium products and services website. Discover our high-quality offerings.' }}">
+    <meta name="twitter:image" content="{{ twitter_image|default:request.build_absolute_uri|add:'static/images/logo.png' }}">
+
+    {% comment %} Canonical URL to avoid duplicate content {% endcomment %}
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
     {% load static %}
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="64x64" href="{% static 'images/logo.png' %}">

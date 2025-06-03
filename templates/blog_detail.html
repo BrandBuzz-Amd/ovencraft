@@ -72,6 +72,28 @@
 {% endblock %}
 
 {% block content %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ blog.title|escapejs }}",
+  "image": "{{ blog.featured_image|default:'' }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ blog.author.full_name|default:blog.author.username|escapejs }}"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Oven Craft",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ request.build_absolute_uri|add:'static/images/logo.png' }}"
+    }
+  },
+  "datePublished": "{{ blog.published_at|date:'Y-m-d'|default:blog.created_at|date:'Y-m-d' }}",
+  "description": "{{ blog.meta_description|default:blog.excerpt|escapejs }}"
+}
+</script>
 <!-- Blog Post Hero Section -->
 <section class="blog-post-hero-section">
     <div class="container">
