@@ -140,7 +140,7 @@
             <div class="gallery-item" data-category="{{ item.category.name if item.category and item.category.name else (item.category if item.category else 'Uncategorized') }}">
                 <div class="gallery-image">
                     {% set img_path = "/static/" + item.file_path if item.file_path and not item.file_path.startswith('/static/') else item.file_path %}
-                    <img src="{{ img_path }}" alt="{{ item.title }}" class="gallery-img">
+                    <img src="{{ img_path }}" alt="Brick oven installed in Bangalore kitchen" class="gallery-img">
                     <div class="gallery-overlay">
                         <div class="gallery-caption">
                             <h3>{{ item.title }}</h3>
@@ -176,7 +176,7 @@
                 <div class="video-wrapper">
                     {% set thumb_path = "/static/" + item.thumbnail_path if item.thumbnail_path and not item.thumbnail_path.startswith('/static/') else (item.thumbnail_path or '') %}
                     {% set video_path = "/static/" + item.file_path if item.file_path and not item.file_path.startswith('/static/') else item.file_path %}
-                    <img src="{% static \'uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg\' %}" alt="{{ item.title }}" class="video-thumbnail">
+                    <img src="{% static \'uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg\' %}" alt="Neapolitan dome oven with wood fire" class="video-thumbnail">
                     <div class="video-overlay">
                         <button class="video-play-btn" data-video="{{ video_path }}">
                             <i class="bi bi-play-circle-fill"></i>
@@ -211,7 +211,7 @@
 <!-- Lightbox for Image Gallery -->
 <div class="lightbox" id="gallery-lightbox">
     <div class="lightbox-container">
-        <img src="" alt="" id="lightbox-image">
+        <img src="" alt="Handcrafted wood-fired pizza oven display" id="lightbox-image">
         <div class="lightbox-caption">
             <h3 id="lightbox-title"></h3>
             <p id="lightbox-description"></p>

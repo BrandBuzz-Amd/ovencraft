@@ -132,13 +132,13 @@
                      {% if item.file_path %}
                          {% if item.file_path|slice:":8" != "/static/" %}
                              {% with img_path="/static/"|add:item.file_path %}
-                                 <img src="{{ img_path }}" alt="{{ item.title }}" class="gallery-img">
+                                 <img src="{{ img_path }}" alt="Brick oven installed in Bangalore kitchen" class="gallery-img">
                              {% endwith %}
                          {% else %}
-                             <img src="{{ item.file_path }}" alt="{{ item.title }}" class="gallery-img">
+                             <img src="{{ item.file_path }}" alt="Neapolitan dome oven with wood fire" class="gallery-img">
 {% endif %}
                      {% else %}
-                         <img src="" alt="{{ item.title }}" class="gallery-img">
+                         <img src="" alt="Handcrafted wood-fired pizza oven display" class="gallery-img">
 {% endif %}
                     <div class="gallery-overlay">
                         <div class="gallery-caption">
@@ -190,16 +190,16 @@
                     {% if item.thumbnail_path %}
                         {% if item.thumbnail_path|slice:":8" != "/static/" %}
                             {% with thumb_path="/static/"|add:item.thumbnail_path %}
-                                <img src="{{ thumb_path }}" alt="{{ item.title }}" class="video-thumbnail">
+                                <img src="{{ thumb_path }}" alt="Outdoor pizza oven in use" class="video-thumbnail">
                             {% endwith %}
                         {% else %}
                             {% with thumb_path=item.thumbnail_path %}
-                                <img src="{{ thumb_path }}" alt="{{ item.title }}" class="video-thumbnail">
+                                <img src="{{ thumb_path }}" alt="Gallery showcase of OvenCraft ovens" class="video-thumbnail">
                             {% endwith %}
 {% endif %}
                     {% else %}
                         {% with thumb_path="" %}
-                            <img src="{{ thumb_path }}" alt="{{ item.title }}" class="video-thumbnail">
+                            <img src="{{ thumb_path }}" alt="Customer oven installation in Whitefield" class="video-thumbnail">
                         {% endwith %}
 {% endif %}
                     {% if item.file_path and item.file_path|slice:":8" != "/static/" %}
@@ -215,7 +215,7 @@
                         </div>
                     {% endwith %}
                 {% else %}
-                    <img src="/static/uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg" alt="{{ item.title }}" class="video-thumbnail">
+                    <img src="/static/uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg" alt="Closeup of mosaic finish on oven" class="video-thumbnail">
                     <div class="video-overlay">
                         <button class="video-play-btn" data-video="{{ item.file_path }}">
                             <i class="bi bi-play-circle-fill"></i>
@@ -228,7 +228,7 @@
 {% endif %}
                 
                     {% else %}
-                        <img src="/static/uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg" alt="{{ item.title }}" class="video-thumbnail">
+                        <img src="/static/uploads/gallery/3f13890b-5c7d-4216-a315-e5e34b78ffca.jpg" alt="Baking pizza in traditional brick oven" class="video-thumbnail">
                         <div class="video-overlay">
                             <button class="video-play-btn" data-video="{{ item.file_path }}">
                                 <i class="bi bi-play-circle-fill"></i>
@@ -265,7 +265,7 @@
 <!-- Lightbox for Image Gallery -->
 <div class="lightbox" id="gallery-lightbox">
     <div class="lightbox-container">
-        <img src="" alt="" id="lightbox-image">
+        <img src="" alt="Premium pizza oven model on display" id="lightbox-image">
         <div class="lightbox-caption">
             <h3 id="lightbox-title"></h3>
             <p id="lightbox-description"></p>
