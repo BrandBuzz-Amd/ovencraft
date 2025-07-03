@@ -40,10 +40,19 @@
     <!-- Custom CSS -->
     {% load static %}
     <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'css/floating-buttons.css' %}" rel="stylesheet">
     
     {% block extra_css %}{% endblock %}
 </head>
 <body>
+    <!-- Floating Action Buttons -->
+    <a href="tel:+919265081926" class="floating-button call-button" title="Call Us">
+        <i class="bi bi-telephone-fill"></i>
+    </a>
+    <a href="https://wa.me/919265081926" class="floating-button whatsapp-button" title="Chat on WhatsApp" target="_blank">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+    
     {% include 'components/preloader.html' %}
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark custom-header sticky-top">
