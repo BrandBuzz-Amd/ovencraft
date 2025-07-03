@@ -1,16 +1,5 @@
-
 from django.db import models
-from django.contrib.auth.models import AbstractUser
-from django.utils.translation import gettext_lazy as _
-
-class UserRole(models.TextChoices):
-    ADMIN = "admin", _("Admin")
-    EDITOR = "editor", _("Editor")
-    USER = "user", _("User")
-
-from django.contrib.auth.models import Group, Permission
-from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.utils.translation import gettext_lazy as _
 
 class UserRole(models.TextChoices):

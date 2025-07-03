@@ -1,0 +1,697 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+        <h1>🏠 OvenCraft Admin Dashboard</h1>
+        <p>Welcome back! Here's what's happening with your website today.</p>
+    </div>
+
+    <!-- Visitor Stats Section -->
+    <div class="section-header">
+        <h2>📊 Visitor Analytics</h2>
+    </div>
+    <div class="stats-overview">
+        <div class="stat-card visitor-today">
+            <div class="stat-icon">📅</div>
+            <div class="stat-content">
+                <h3>Today's Visitors</h3>
+                <p class="stat-number">{{ visitor_stats.today }}</p>
+                <span class="stat-label">unique visitors today</span>
+            </div>
+        </div>
+        <div class="stat-card visitor-week">
+            <div class="stat-icon">📈</div>
+            <div class="stat-content">
+                <h3>This Week</h3>
+                <p class="stat-number">{{ visitor_stats.week }}</p>
+                <span class="stat-label">visitors this week</span>
+            </div>
+        </div>
+        <div class="stat-card visitor-month">
+            <div class="stat-icon">📆</div>
+            <div class="stat-content">
+                <h3>This Month</h3>
+                <p class="stat-number">{{ visitor_stats.month }}</p>
+                <span class="stat-label">visitors this month</span>
+            </div>
+        </div>
+        <div class="stat-card visitor-total">
+            <div class="stat-icon">🌍</div>
+            <div class="stat-content">
+                <h3>Total Visitors</h3>
+                <p class="stat-number">{{ visitor_stats.total }}</p>
+                <span class="stat-label">all-time visitors</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Management Section -->
+    <div class="section-header">
+        <h2>📝 Content Management</h2>
+    </div>
+    <div class="content-stats">
+        <div class="stat-card content-products">
+            <div class="stat-icon">🍽️</div>
+            <div class="stat-content">
+                <h3>Products</h3>
+                <p class="stat-number">{{ product_count }}</p>
+                <span class="stat-label">total products</span>
+                <a href="/admin/product/product/" class="quick-action">Manage Products →</a>
+            </div>
+        </div>
+        <div class="stat-card content-blogs">
+            <div class="stat-icon">📰</div>
+            <div class="stat-content">
+                <h3>Blog Posts</h3>
+                <p class="stat-number">{{ blog_count }}</p>
+                <span class="stat-label">published posts</span>
+                <a href="/admin/blog/blog/" class="quick-action">Manage Blogs →</a>
+            </div>
+        </div>
+        <div class="stat-card content-gallery">
+            <div class="stat-icon">🖼️</div>
+            <div class="stat-content">
+                <h3>Gallery Items</h3>
+                <p class="stat-number">{{ gallery_count }}</p>
+                <span class="stat-label">media files</span>
+                <a href="/admin/gallery/galleryitem/" class="quick-action">Manage Gallery →</a>
+            </div>
+        </div>
+        <div class="stat-card content-users">
+            <div class="stat-icon">👥</div>
+            <div class="stat-content">
+                <h3>Users</h3>
+                <p class="stat-number">{{ user_count }}</p>
+                <span class="stat-label">registered users</span>
+                <a href="/admin/users/user/" class="quick-action">Manage Users →</a>
+            </div>
+        </div>
+        <div class="stat-card content-contacts">
+            <div class="stat-icon">📧</div>
+            <div class="stat-content">
+                <h3>Contact Messages</h3>
+                <p class="stat-number">{{ contact_count }}</p>
+                <span class="stat-label">customer inquiries</span>
+                <a href="/admin/contact/contact/" class="quick-action">View Messages →</a>
+            </div>
+        </div>
+        <div class="stat-card content-newsletter">
+            <div class="stat-icon">📬</div>
+            <div class="stat-content">
+                <h3>Newsletter Subscribers</h3>
+                <p class="stat-number">{{ newsletter_count }}</p>
+                <span class="stat-label">active subscribers</span>
+                <a href="/admin/contact/newsletter/" class="quick-action">Manage Newsletter →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Charts -->
+    <div class="section-header">
+        <h2>📈 Analytics Charts</h2>
+    </div>
+    <div class="analytics-section">
+        <div class="chart-container">
+            <h3>📊 Daily Visitors Trend (Last 7 Days)</h3>
+            <canvas id="visitorTrendChart" height="100"></canvas>
+        </div>
+        <div class="charts-row">
+            <div class="chart-box">
+                <h3>💻 Device Distribution</h3>
+            <canvas id="deviceChart" width="300" height="200"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>🌐 Browser Distribution</h3>
+            <canvas id="browserChart" width="300" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="section-header">
+        <h2>🕒 Recent Activity</h2>
+    </div>
+    <div class="recent-activity">
+        <div class="activity-section">
+            <h3>📧 Recent Contact Messages</h3>
+            <div class="activity-list">
+                {% for contact in recent_contacts %}
+                <div class="activity-item">
+                    <div class="activity-icon">💬</div>
+                    <div class="activity-content">
+                        <span class="activity-title">{{ contact.subject }}</span>
+                        <span class="activity-meta">from {{ contact.name }} - {{ contact.created_at|timesince }} ago</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <p>No recent contact messages</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="activity-section">
+            <h3>🍽️ Recent Products</h3>
+            <div class="activity-list">
+                {% for product in recent_products %}
+                <div class="activity-item">
+                    <div class="activity-icon">🆕</div>
+                    <div class="activity-content">
+                        <span class="activity-title">{{ product.name }}</span>
+                        <span class="activity-meta">{{ product.created_at|timesince }} ago</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <p>No recent products</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="activity-section">
+            <h3>📰 Recent Blog Posts</h3>
+            <div class="activity-list">
+                {% for blog in recent_blogs %}
+                <div class="activity-item">
+                    <div class="activity-icon">✍️</div>
+                    <div class="activity-content">
+                        <span class="activity-title">{{ blog.title }}</span>
+                        <span class="activity-meta">{{ blog.created_at|timesince }} ago</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state">
+                    <p>No recent blog posts</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="section-header">
+        <h2>⚡ Quick Actions</h2>
+    </div>
+    <div class="quick-actions">
+        <a href="/admin/product/product/add/" class="action-btn primary">
+            <span class="btn-icon">➕</span>
+            Add New Product
+        </a>
+        <a href="/admin/blog/blog/add/" class="action-btn secondary">
+            <span class="btn-icon">📝</span>
+            Write Blog Post
+        </a>
+        <a href="/admin/gallery/galleryitem/add/" class="action-btn tertiary">
+            <span class="btn-icon">🖼️</span>
+            Upload Media
+        </a>
+        <a href="/admin/contact/contact/" class="action-btn info">
+            <span class="btn-icon">📧</span>
+            View Messages
+        </a>
+    </div>
+</div>
+
+<style>
+    .dashboard-container {
+        padding: 15px;
+        background: #f8f9fa;
+        min-height: 100vh;
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        scroll-behavior: smooth;
+        overflow-x: hidden;
+    }
+
+    .welcome-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .welcome-header h1 {
+        margin: 0 0 8px 0;
+        font-size: 2em;
+        font-weight: 300;
+    }
+
+    .welcome-header p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 1em;
+    }
+
+    .section-header {
+        margin: 20px 0 15px 0;
+    }
+
+    .section-header h2 {
+        color: #2c3e50;
+        font-size: 1.3em;
+        font-weight: 600;
+        margin: 0;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .stats-overview, .content-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .stat-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        border-left: 4px solid #e9ecef;
+        transition: box-shadow 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .stat-card:hover {
+        box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+    }
+
+    .visitor-today { border-left-color: #28a745; }
+    .visitor-week { border-left-color: #17a2b8; }
+    .visitor-month { border-left-color: #ffc107; }
+    .visitor-total { border-left-color: #6f42c1; }
+    .content-products { border-left-color: #fd7e14; }
+    .content-blogs { border-left-color: #20c997; }
+    .content-gallery { border-left-color: #e83e8c; }
+    .content-users { border-left-color: #6610f2; }
+    .content-contacts { border-left-color: #dc3545; }
+    .content-newsletter { border-left-color: #007bff; }
+
+    .stat-icon {
+        font-size: 2em;
+        opacity: 0.8;
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-content h3 {
+        margin: 0 0 5px 0;
+        color: #495057;
+        font-size: 1em;
+        font-weight: 600;
+    }
+
+    .stat-number {
+        font-size: 1.8em;
+        font-weight: bold;
+        color: #2c3e50;
+        margin: 3px 0;
+        line-height: 1;
+    }
+
+    .stat-label {
+        font-size: 0.85em;
+        color: #6c757d;
+        display: block;
+    }
+
+    .quick-action {
+        display: inline-block;
+        margin-top: 8px;
+        color: #007bff;
+        text-decoration: none;
+        font-size: 0.9em;
+        font-weight: 500;
+    }
+
+    .quick-action:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+    .analytics-section {
+        margin-bottom: 20px;
+    }
+
+    .chart-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        margin-bottom: 15px;
+    }
+
+    .chart-container h3 {
+        margin: 0 0 15px 0;
+        color: #495057;
+        font-size: 1.1em;
+        font-weight: 600;
+    }
+
+    .charts-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        max-width: 100%;
+    }
+
+    .chart-box {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+        width: 100%;
+        max-width: 350px;
+        height: 280px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .chart-box h3 {
+        margin: 0 0 15px 0;
+        color: #495057;
+        font-size: 1em;
+        font-weight: 600;
+    }
+
+    .chart-box canvas {
+        max-width: 100% !important;
+        max-height: 200px !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    .recent-activity {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .activity-section {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.07);
+    }
+
+    .activity-section h3 {
+        margin: 0 0 15px 0;
+        color: #495057;
+        font-size: 1em;
+        font-weight: 600;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-icon {
+        font-size: 1.2em;
+        opacity: 0.7;
+    }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-title {
+        display: block;
+        font-weight: 600;
+        color: #495057;
+        margin-bottom: 2px;
+    }
+
+    .activity-meta {
+        font-size: 0.85em;
+        color: #6c757d;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 20px;
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .action-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: box-shadow 0.2s ease;
+        text-align: center;
+        font-size: 0.9em;
+    }
+
+    .action-btn.primary {
+        background: #007bff;
+        color: white;
+    }
+
+    .action-btn.secondary {
+        background: #28a745;
+        color: white;
+    }
+
+    .action-btn.tertiary {
+        background: #ffc107;
+        color: #212529;
+    }
+
+    .action-btn.info {
+        background: #17a2b8;
+        color: white;
+    }
+
+    .action-btn:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .btn-icon {
+        font-size: 1.1em;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-container {
+            padding: 15px;
+        }
+        
+        .stats-overview, .content-stats {
+            grid-template-columns: 1fr;
+        }
+        
+        .charts-row {
+            grid-template-columns: 1fr;
+        }
+        
+        .chart-box {
+            max-width: 100%;
+            height: 250px;
+        }
+        
+        .recent-activity {
+            grid-template-columns: 1fr;
+        }
+        
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var dailyVisitors = {{ daily_visitors|safe }};
+    var deviceData = {{ device_stats|safe }};
+    var browserData = {{ browser_stats|safe }};
+
+    // Prevent scroll interference
+    let isScrolling = false;
+    
+    // Add smooth scrolling behavior
+    document.addEventListener('scroll', function() {
+        isScrolling = true;
+        setTimeout(function() {
+            isScrolling = false;
+        }, 100);
+    }, { passive: true });
+
+    // Visitor Trend Chart
+    if (dailyVisitors && dailyVisitors.length > 0) {
+        new Chart(document.getElementById('visitorTrendChart'), {
+            type: 'line',
+            data: {
+                labels: dailyVisitors.map(function(item) { return item.date; }),
+                datasets: [{
+                    label: 'Daily Visitors',
+                    data: dailyVisitors.map(function(item) { return item.count; }),
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(0,0,0,0.05)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // Device Distribution Chart
+    if (deviceData && deviceData.length > 0) {
+        new Chart(document.getElementById('deviceChart'), {
+            type: 'doughnut',
+            data: {
+                labels: deviceData.map(function(item) { return item.device_type; }),
+                datasets: [{
+                    data: deviceData.map(function(item) { return item.count; }),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: true,
+                aspectRatio: 1.2,
+                interaction: {
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 8,
+                            usePointStyle: true,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                layout: {
+                    padding: 10
+                }
+            }
+        });
+    }
+
+    // Browser Distribution Chart
+    if (browserData && browserData.length > 0) {
+        new Chart(document.getElementById('browserChart'), {
+            type: 'doughnut',
+            data: {
+                labels: browserData.map(function(item) { return item.browser; }),
+                datasets: [{
+                    data: browserData.map(function(item) { return item.count; }),
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: false,
+                maintainAspectRatio: true,
+                aspectRatio: 1.2,
+                interaction: {
+                    intersect: false
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 8,
+                            usePointStyle: true,
+                            font: {
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                layout: {
+                    padding: 10
+                }
+            }
+        });
+    }
+
+    // Prevent any chart interactions from affecting scroll
+    document.querySelectorAll('canvas').forEach(function(canvas) {
+        canvas.addEventListener('wheel', function(e) {
+            if (!isScrolling) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    });
+});
+</script>
+{% endblock %}

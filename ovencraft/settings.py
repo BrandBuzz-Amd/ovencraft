@@ -5,7 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-secret-key'
 DEBUG = True
-ALLOWED_HOSTS = ['ovencraft.in', 'www.ovencraft.in','65.0.180.107'  ]
+ALLOWED_HOSTS = ['ovencraft.in', 'www.ovencraft.in','65.0.180.107', '127.0.0.1', 'localhost']
 
 # Application definition
 INSTALLED_APPS = [
@@ -21,7 +21,13 @@ INSTALLED_APPS = [
     'gallery',
     'users',
     'adminpanel',
+    'product',
+    'faq',
+    'about',
 ]
+
+# Custom User Model
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -54,7 +60,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ovencraft.wsgi.application'
 
 # Database
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
