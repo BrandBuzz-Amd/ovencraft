@@ -1,4 +1,4 @@
-dmifrom django.contrib import admin
+from django.contrib import admin
 from django.shortcuts import render
 from django.db.models import Count
 from django.utils import timezone
