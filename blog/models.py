@@ -26,6 +26,7 @@ class Blog(models.Model):
     featured_image = models.ImageField(upload_to='blogs/', blank=True, null=True)
     meta_title = models.CharField(max_length=200, blank=True, null=True)
     meta_description = models.CharField(max_length=255, blank=True, null=True)
+    meta_keywords = models.CharField(max_length=255, blank=True, null=True, help_text="SEO keywords, comma separated")
     is_published = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

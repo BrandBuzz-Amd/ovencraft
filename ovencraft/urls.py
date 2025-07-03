@@ -5,13 +5,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from blog.sitemap import BlogSitemap
+from .admin import admin_site
 
 sitemaps = {
     'blogs': BlogSitemap,
 }
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path("admin/", admin_site.urls),
     path("blogs/", include("blog.urls")),
     path("gallery/", include("gallery.urls")),
     path("contact/", include("contact.urls")),

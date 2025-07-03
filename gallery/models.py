@@ -24,6 +24,7 @@ class GalleryItem(models.Model):
     category = models.ForeignKey(GalleryCategory, null=True, blank=True, on_delete=models.SET_NULL, related_name="items")
     alt_text = models.CharField(max_length=255, blank=True, null=True)
     tags = models.CharField(max_length=255, blank=True, null=True)
+    is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="gallery_items")
