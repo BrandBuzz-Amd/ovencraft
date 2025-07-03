@@ -64,8 +64,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'ovenweb',
-        'USER': 'ovencraftuser',
-        'PASSWORD': 'sAHIL096114',
+        'USER': 'postgres',
+        'PASSWORD': 'Sahil096114',
         'HOST': 'localhost',
         'PORT': '5432',
     }
