@@ -81,6 +81,7 @@ def contact(request):
             name = request.POST.get('name', '').strip()
             email = request.POST.get('email', '').strip()
             phone = request.POST.get('phone', '').strip()
+            phone = request.POST.get('City', '').strip()
             subject = request.POST.get('subject', '').strip()
             message = request.POST.get('message', '').strip()
             newsletter = request.POST.get('newsletter') == 'on'
