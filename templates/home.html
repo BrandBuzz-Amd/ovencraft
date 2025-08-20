@@ -855,60 +855,7 @@ The team at Ovencraft was welcoming, knowledgeable, and passionate about their w
     </div>
 </section>
 
-<!-- Gallery Section -->
-<!-- <section id="gallery" class="gallery-section">
-    <div class="container">
-        <div class="section-title">
-            <h2 class="section-heading">See Our Ovens in Action</h2>
-            <p class="section-subheading">
-                Browse images of our handcrafted fire brick ovens and the impressive dishes they help create.
-            </p>
-        </div>
-        
-        <div class="gallery-filter">
-            <button class="filter-btn active" data-filter="all">All</button>
-            {% for category in categories %}
-                <button class="filter-btn" data-filter="{{ category.name }}">{{ category.name|title }}</button>
-            {% endfor %}
-        </div>
-        
-        <div class="gallery-grid">
-            {% for item in gallery_items %}
-            <div class="gallery-item" data-category="{% if item.category %}{{ item.category.name }}{% else %}uncategorized{% endif %}">
-                <div class="gallery-item-inner">
-                    <img src="{% static item.file_path %}" 
-                         alt="Neapolitan dome oven with wood fire" 
-                         class="gallery-img">
-                    <div class="gallery-overlay">
-                        <div class="gallery-info">
-                            <h3>{{ item.title }}</h3>
-                            <p>{{ item.description|default:'' }}</p>
-                            <a href="#" class="gallery-zoom" 
-                               data-img="{% static item.file_path %}" 
-                               data-title="{{ item.title }}" 
-                               data-desc="{{ item.description|default:'' }}">
-                                <i class="bi bi-zoom-in"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div> -->
-    
-    <!-- Lightbox Modal -->
-<!--     <div class="lightbox-modal" id="lightbox">
-        <span class="lightbox-close"><i class="bi bi-x-lg"></i></span>
-        <img class="lightbox-content" id="lightbox-img" alt="Handcrafted wood-fired pizza oven display">
-        <div class="lightbox-caption">
-            <h3 id="lightbox-title"></h3>
-            <p id="lightbox-description"></p>
-        </div>
-        <button class="lightbox-nav lightbox-prev"><i class="bi bi-chevron-left"></i></button>
-        <button class="lightbox-nav lightbox-next"><i class="bi bi-chevron-right"></i></button>
-    </div>
-</section> -->
+
 
 <style>
 .gallery-section {
