@@ -6,7 +6,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-secret-key'
 DEBUG = True
 ALLOWED_HOSTS = ['3.90.201.27', 'ovencraft.in', 'www.ovencraft.in','65.0.180.107', '127.0.0.1', 'localhost']
-
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -72,12 +71,12 @@ DATABASES = {
 }
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",  
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / "db.sqlite3",  
+#     }
+# }
 
 # Static files
 STATIC_URL = '/static/'
