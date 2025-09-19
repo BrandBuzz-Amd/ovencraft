@@ -64,24 +64,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ovencraft.wsgi.application'
 
 # Database
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'ovencraft',
-#         'USER': 'postgres',
-#         'PASSWORD': 'Sahil096114',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / "db.sqlite3",  
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ovencraft',
+        'USER': 'postgres',
+        'PASSWORD': 'Sahil096114',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / "db.sqlite3",  
+#     }
+# }
 
 # Static files
 STATIC_URL = '/static/'
